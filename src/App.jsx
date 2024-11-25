@@ -1,6 +1,4 @@
-// import useRouterCustom from "../hooks/useRouterCustom.";
-
-import useRouterCustom from "./hooks/UseRouterCustom";
+import UseRoutesCustom from "./hooks/UseRoutesCustom";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React from "react";
@@ -19,7 +17,7 @@ function App() {
       transition: Bounce,
     });
   };
-  const routes = useRouterCustom();
+  const routes = UseRoutesCustom();
   return (
     <>
       <NotificationContext.Provider

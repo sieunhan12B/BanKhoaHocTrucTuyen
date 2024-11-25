@@ -13,7 +13,7 @@ import StudentTemplate from "../templates/StudentTemplate/StudentTemplate";
 import MyAccountPage from "../pages/MyAccountPage/MyAccountPage";
 import MyLearningPage from "../pages/MyLearningPage/MyLearningPage";
 import CoursesDetail from "../pages/CoursesDetail/CoursesDetail";
-const useRouterCustom = () => {
+const UseRoutesCustom = () => {
   const routes = useRoutes([
     {
       path: path.homePage,
@@ -79,4 +79,4 @@ const useRouterCustom = () => {
   return routes;
 };
 
-export default useRouterCustom;
+export default UseRoutesCustom;
