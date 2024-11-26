@@ -13,6 +13,9 @@ import StudentTemplate from "../templates/StudentTemplate/StudentTemplate";
 import MyAccountPage from "../pages/MyAccountPage/MyAccountPage";
 import MyLearningPage from "../pages/MyLearningPage/MyLearningPage";
 import CoursesDetail from "../pages/CoursesDetail/CoursesDetail";
+import TeacherTemplate from "../templates/TeacherTemplate/TeacherTemplate";
+import AdminTemplate from "../templates/AdminTemplate/AdminTemplate";
+import ManagerUser from "../pages/ManagerUser/ManagerUser";
 const UseRoutesCustom = () => {
   const routes = useRoutes([
     {
@@ -73,6 +76,20 @@ const UseRoutesCustom = () => {
         //   path: path.dashboard,
         //   element: <DashboardPage />,
         // },
+      ],
+    },
+    {
+      path: path.teacher,
+      element: <TeacherTemplate />,
+    },
+    {
+      path: path.admin,
+      element: <AdminTemplate />,
+      children: [
+        {
+          path: path.managerUser,
+          element: <ManagerUser />,
+        },
       ],
     },
   ]);

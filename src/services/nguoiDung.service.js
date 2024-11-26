@@ -7,4 +7,14 @@ export const nguoiDungService = {
   signUp: (data) => {
     return http.post("/QuanLyNguoiDung/DangKy", data);
   },
+  createUSer: (data, token) => {
+    return http.post("/QuanLyNguoiDung/ThemNguoiDung", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  getListUser: () => {
+    return http.get("/QuanLyNguoiDung/LayDanhSachNguoiDung");
+  },
 };
