@@ -6,6 +6,6 @@ export const http = axios.create({
   timeout: 30000,
   headers: {
     tokenCyberSoft:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCA2OSIsIkhldEhhblN0cmluZyI6IjMxLzAxLzIwMjUiLCJIZXRIYW5UaW1lIjoiMTczODI4MTYwMDAwMCIsIm5iZiI6MTcxMDUyMjAwMCwiZXhwIjoxNzM4NDI5MjAwfQ.bsAaudu2iAsJe1QzbsWWy0HG7ofC_8rFKL-MG_jW1ig",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJOb2RlSlMgNDQiLCJIZXRIYW5TdHJpbmciOiIwMy8wNC8yMDI1IiwiSGV0SGFuVGltZSI6IjE3NDM2Mzg0MDAwMDAiLCJuYmYiOjE3MjUwMzcyMDAsImV4cCI6MTc0Mzc4NjAwMH0.N5sVjCi7aBpELt6vYeQ04gMIVjBTB81CWtl80LZnBwU",
   },
 });

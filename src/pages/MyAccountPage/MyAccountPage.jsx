@@ -1,8 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import InputCustom from "../../components/Input/InputCustom";
 import { Image } from "antd";
+import { getLocalStorage } from "../../utils/utils";
+import FormAddItem from "../../components/FormAddItem/FormAddItem";
+import { nguoiDungService } from "../../services/nguoiDung.service";
 
 const MyAccountPage = () => {
+  const user = getLocalStorage("user");
+  console.log(user.accessToken);
+  useEffect(() => {
+    if (!user || !user.accessToken) {
+      console.log("Không tìm thấy thông tin đăng nhập");
+      return;
+    }
+
+    nguoiDungService
+      .infoAccount(user.accessToken)
+      .then((res) => {
+        console.log("Thông tin tài khoản:", res.data);
+      })
+      .catch((err) => {
+        console.log("Lỗi khi lấy thông tin:", err);
+        if (err.response?.status === 401) {
+          console.log("Token không hợp lệ hoặc đã hết hạn");
+        }
+      });
+  }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const mappedUserData = {
+    ...user,
+    soDt: user?.soDT,
+  };
+
+  console.log(user.soDT);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleUpdateSuccess = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="my-account-page p-3 sm:p-5 mx-auto bg-white rounded-2xl max-w-7xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
@@ -12,7 +55,10 @@ const MyAccountPage = () => {
             Điều này sẽ được chia sẻ với các học viên khác
           </p>
         </div>
-        <button className="bg-yellow-500 font-semibold px-4 py-2 rounded-md w-full sm:w-auto">
+        <button
+          onClick={handleOpenModal}
+          className="bg-yellow-500 font-semibold px-4 py-2 rounded-md w-full sm:w-auto"
+        >
           Chỉnh sửa
         </button>
       </div>
@@ -22,7 +68,7 @@ const MyAccountPage = () => {
           <div className="relative">
             <div className="w-24 sm:w-32 h-24 sm:h-32 rounded-full overflow-hidden border-2 border-gray-200">
               <Image
-                src={"/Image/rimuru.jpg"}
+                src={user?.avatar || "/Image/rimuru.jpg"}
                 alt="Avatar"
                 className="w-full h-full object-cover"
               />
@@ -73,8 +119,8 @@ const MyAccountPage = () => {
             name="email"
             typeInput="email"
             placeholder="example@gmail.com"
-            //   value={formData.email}
-            //   onChange={handleChange}
+            value={user?.email || ""}
+            disabled
           />
 
           <InputCustom
@@ -83,16 +129,15 @@ const MyAccountPage = () => {
             name="username"
             typeInput="text"
             placeholder="Nhập tài khoản của bạn"
-            //   value={formData.birthDate}
-            //   onChange={handleChange}
+            value={user?.taiKhoan || ""}
+            disabled
           />
           <InputCustom
             labelContent="Họ tên"
             id="fullname"
             name="fullname"
             placeholder="Nhập họ tên của bạn"
-            //   value={formData.lastName}
-            //   onChange={handleChange}
+            value={user?.hoTen || ""}
           />
 
           <InputCustom
@@ -100,8 +145,8 @@ const MyAccountPage = () => {
             id="password"
             name="password"
             placeholder="Nhập mật khẩu"
-            //   value={formData.phone}
-            //   onChange={handleChange}
+            value={user?.matKhau || ""}
+            type="password"
           />
 
           <InputCustom
@@ -109,8 +154,7 @@ const MyAccountPage = () => {
             id="phone"
             name="phone"
             placeholder="Nhập số điện thoại"
-            //   value={formData.address}
-            //   onChange={handleChange}
+            value={user?.soDT || ""}
           />
           <div className="w-full col-span-1 md:col-span-2">
             <label
@@ -124,10 +168,17 @@ const MyAccountPage = () => {
               id="aboutMe"
               placeholder="Mô tả"
               className="border-2 border-gray-300 rounded-md p-2 w-full h-24 sm:h-32"
+              value={user?.moTa || ""}
             ></textarea>
           </div>
         </div>
       </div>
+      <FormAddItem
+        isModalOpen={isModalOpen}
+        handleCancel={handleCloseModal}
+        onFinish={handleUpdateSuccess}
+        userData={mappedUserData}
+      />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
-
 import { Image } from "antd";
 import React from "react";
 import { path } from "../../common/path";
@@ -43,14 +42,7 @@ const Header = () => {
               <FormSearchProduct className="w-[350px]" />
 
               <CustomDropdownHeader />
-              {user && (
-                <NavLink
-                  to={`${path.student}/${path.myLearning}`}
-                  className="font-medium"
-                >
-                  Khóa học của tôi
-                </NavLink>
-              )}
+
               <NavLink to={path.blog} className="font-medium">
                 Bài viết
               </NavLink>
@@ -108,15 +100,6 @@ const Header = () => {
               <div className="flex flex-col px-4">
                 <CustomDropdownHeader />
 
-                {user && (
-                  <Link
-                    to={`${path.student}/${path.myLearning}`}
-                    className="text-lg font-medium py-3 border-b"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Khóa học của tôi
-                  </Link>
-                )}
                 <Link
                   to={path.blog}
                   className="text-lg font-medium py-3 border-b"

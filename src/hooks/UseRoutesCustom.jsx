@@ -16,6 +16,8 @@ import CoursesDetail from "../pages/CoursesDetail/CoursesDetail";
 import TeacherTemplate from "../templates/TeacherTemplate/TeacherTemplate";
 import AdminTemplate from "../templates/AdminTemplate/AdminTemplate";
 import ManagerUser from "../pages/ManagerUser/ManagerUser";
+import ManagerCourse from "../pages/ManagerCourse/ManagerCourse";
+import MyCoursePageTeach from "../pages/MyCoursePageTeach/MyCoursePageTeach";
 const UseRoutesCustom = () => {
   const routes = useRoutes([
     {
@@ -81,6 +83,16 @@ const UseRoutesCustom = () => {
     {
       path: path.teacher,
       element: <TeacherTemplate />,
+      children: [
+        {
+          path: path.myCourse,
+          element: <MyCoursePageTeach />,
+        },
+        {
+          path: path.myAccount,
+          element: <MyAccountPage />,
+        },
+      ],
     },
     {
       path: path.admin,
@@ -89,6 +101,10 @@ const UseRoutesCustom = () => {
         {
           path: path.managerUser,
           element: <ManagerUser />,
+        },
+        {
+          path: path.managerCourse,
+          element: <ManagerCourse />,
         },
       ],
     },

@@ -42,7 +42,7 @@ const CustomDropdownHeader = () => {
         trigger={["hover"]}
       >
         <span className="flex items-center space-x-2 cursor-pointer py-3 lg:border-none border-b">
-          <span className="text-lg font-medium">Khóa học</span>
+          <span className="font-medium">Khóa học</span>
           <DownOutlined style={{ fontSize: "12px" }} />
         </span>
       </Dropdown>

@@ -24,4 +24,6 @@ export const path = {
   myAccount: "my-account",
   myLearning: "my-learning",
   coursesDetail: "courses-detail/:id",
+  managerCourse: "manager-course",
+  
 };

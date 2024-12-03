@@ -20,4 +20,32 @@ export const khoaHocService = {
       `/QuanLyKhoaHoc/LayDanhSachKhoaHoc_PhanTrang?pageIndex=${page}&pageSize=${limit}`
     );
   },
+  addCourse: (data, token) => {
+    return http.post("/QuanLyKhoaHoc/ThemKhoaHoc", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  deleteCourse: (maKhoaHoc, token) => {
+    return http.delete(`/QuanLyKhoaHoc/XoaKhoaHoc?maKhoaHoc=${maKhoaHoc}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  updateCourse: (data, token) => {
+    return http.put("/QuanLyKhoaHoc/CapNhatKhoaHoc", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  registerCourse: (data, token) => {
+    return http.post("/QuanLyKhoaHoc/GhiDanhKhoaHoc", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

@@ -20,7 +20,12 @@ const AvatarMenu = () => {
     {
       key: "1",
       label: "Thông tin cá nhân",
-      onClick: () => navigate(path.student),
+      onClick: () =>
+        navigate(
+          user.maLoaiNguoiDung === "GV"
+            ? `${path.teacher}/${path.myAccount}`
+            : `${path.student}/${path.myAccount}`
+        ),
     },
     {
       key: "2",

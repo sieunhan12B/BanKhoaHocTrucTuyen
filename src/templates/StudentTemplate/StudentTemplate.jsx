@@ -9,7 +9,7 @@ import {
 import AvatarMenu from "../../components/AvatarMenu/AvatarMenu";
 import HomeIcon from "../../components/Icons/HomeIcon";
 import { getLocalStorage } from "../../utils/utils";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { path } from "../../common/path";
 import { Link } from "react-router-dom";
 import { Image } from "antd";
@@ -19,9 +19,32 @@ const StudentTemplate = () => {
   const user = getLocalStorage("user");
   console.log(user);
   const navigate = useNavigate();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedKey, setSelectedKey] = useState(() => {
+    const pathname = location.pathname;
+    switch (pathname) {
+      case path.myAccount:
+        return "2";
+      case path.myLearning:
+        return "1";
+      default:
+        if (pathname.includes("my-account")) return "2";
+        if (pathname.includes("my-learning")) return "1";
+        return "1";
+    }
+  });
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname.includes("my-account")) {
+      setSelectedKey("2");
+    } else if (pathname.includes("my-learning")) {
+      setSelectedKey("1");
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,27 +57,20 @@ const StudentTemplate = () => {
   const menuItems = [
     {
       key: "1",
-      icon: <MenuOutlined />,
-      label: "Bảng điều khiển",
-    },
-    {
-      key: "2",
       icon: <BookOutlined />,
       label: "Bài học của tôi",
       onClick: () => {
+        setSelectedKey("1");
         navigate(path.myLearning);
       },
     },
+
     {
-      key: "3",
-      icon: <HistoryOutlined />,
-      label: "Lịch sử mua hàng",
-    },
-    {
-      key: "4",
+      key: "2",
       icon: <UserOutlined />,
       label: "Thông tin tài khoản",
       onClick: () => {
+        setSelectedKey("2");
         navigate(path.myAccount);
       },
     },
@@ -86,7 +102,7 @@ const StudentTemplate = () => {
           </div>
           <Menu
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[selectedKey]}
             style={{ height: "100%", borderRight: 0 }}
             items={menuItems}
           />
@@ -109,7 +125,7 @@ const StudentTemplate = () => {
         </div>
         <Menu
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={[selectedKey]}
           style={{ height: "100%", borderRight: 0 }}
           items={menuItems}
         />

@@ -26,11 +26,12 @@ const LogInPage = () => {
       nguoiDungService
         .logIn(values)
         .then((res) => {
+          console.log(res.data);
           setLocalStorage("user", res.data);
           showNotification("Đăng nhập thành công", "success");
           setTimeout(() => {
             navigate(path.homePage);
-          }, 2000);
+          }, 1000);
         })
         .catch((err) => {
           showNotification(err.response.data, "error");

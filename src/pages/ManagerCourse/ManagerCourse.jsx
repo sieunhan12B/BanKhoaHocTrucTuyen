@@ -1,53 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Space, Table, Tag } from "antd";
-import { nguoiDungService } from "../../services/nguoiDung.service";
+import { Space, Table, Image } from "antd";
 import { NotificationContext } from "../../App";
-import { Link } from "react-router-dom";
+
 import FormSearchProduct from "../../components/FormSearchProduct/FormSearchProduct";
-import FormAddItem from "../../components/FormAddItem/FormAddItem";
 import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
+import { khoaHocService } from "../../services/khoaHoc.service";
+import FormAddCourse from "../../components/FormAddItem/FormAddCourse";
 import { getLocalStorage } from "../../utils/utils";
-const ManagerUser = () => {
-  const [listNguoiDung, setListNguoiDung] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const { accessToken } = getLocalStorage("user");
+const ManagerCourse = () => {
+  const [listCourses, setListCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const { showNotification } = useContext(NotificationContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const { accessToken } = getLocalStorage("user");
   useEffect(() => {
-    nguoiDungService
-      .getListUser()
+    // Thêm service call API get courses ở đây
+    khoaHocService
+      .getCourse()
       .then((res) => {
-        showNotification("Lấy dữ liệu người dùng thành công", "success");
-        setListNguoiDung(res.data);
-        setFilteredUsers(res.data);
+        showNotification("Lấy dữ liệu khóa học thành công", "success");
+        console.log(res);
+        setListCourses(res.data);
+        setFilteredCourses(res.data);
       })
       .catch((err) => {
-        showNotification("Không thể lấy dữ liệu người dùng", "error");
-        console.log(err);
+        showNotification("Lấy dữ liệu khóa học thất bại", "error");
       });
   }, []);
 
   const handleSearch = (searchTerm) => {
-    const filtered = listNguoiDung.filter((user) => {
-      const normalizedName = removeVietnameseTones(user.hoTen)
+    const filtered = listCourses.filter((course) => {
+      const normalizedName = removeVietnameseTones(course.tenKhoaHoc)
         .toLowerCase()
         .trim();
-      const normalizedAccount = removeVietnameseTones(user.taiKhoan)
-        .toLowerCase()
-        .trim();
-      return (
-        normalizedName.includes(searchTerm) ||
-        normalizedAccount.includes(searchTerm)
-      );
+      return normalizedName.includes(searchTerm);
     });
-    setFilteredUsers(filtered);
+    setFilteredCourses(filtered);
   };
 
-  const showModal = (user = null) => {
-    setSelectedUser(user);
+  const showModal = (course = null) => {
+    setSelectedCourse(course);
     setIsModalOpen(true);
   };
 
@@ -56,16 +51,16 @@ const ManagerUser = () => {
   };
 
   const onFinish = () => {
-    nguoiDungService
-      .getListUser()
+    khoaHocService
+      .getCourse()
       .then((res) => {
+        setListCourses(res.data);
+        setFilteredCourses(res.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
-        setListNguoiDung(res.data);
-        setFilteredUsers(res.data);
       })
       .catch((err) => {
+        console.log("Error fetching updated data:", err);
         showNotification("Không thể cập nhật dữ liệu", "error");
-        console.log(err);
       });
   };
 
@@ -76,37 +71,45 @@ const ManagerUser = () => {
       width: 70,
       align: "center",
       render: (_, __, index) => (
-        <span className="">{(currentPage - 1) * pageSize + index + 1}</span>
+        <span>{(currentPage - 1) * pageSize + index + 1}</span>
       ),
     },
-
     {
-      title: "số điện thoại ",
-      dataIndex: "soDt",
-      key: "soDt",
+      title: "ID",
+      dataIndex: "maKhoaHoc",
+      key: "maKhoaHoc",
     },
     {
-      title: "tài khoản",
-      dataIndex: "taiKhoan",
-      key: "taiKhoan",
+      title: "Tên khóa học",
+      dataIndex: "tenKhoaHoc",
+      key: "tenKhoaHoc",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Lượt xem  ",
+      dataIndex: "luotXem",
+      key: "luotXem",
     },
+    // {
+    //   title: "Hình ảnh",
+    //   dataIndex: "hinhAnh",
+    //   key: "hinhAnh",
+    //   render: (hinhAnh) => (
+    //     console.log(hinhAnh),
+    //     (
+    //       <Image
+    //         width={100}
+    //         src={hinhAnh}
+    //         alt="Hình ảnh khóa học"
+    //         // className="w-20 h-20"
+    //       />
+    //     )
+    //   ),
+    // },
     {
-      title: "Họ tên",
-      dataIndex: "hoTen",
-      key: "hoTen",
-    },
-    {
-      title: "role",
-      dataIndex: "maLoaiNguoiDung",
-      key: "maLoaiNguoiDung",
-      render: (text) => (
-        <Tag color={text == "HV" ? "cyan-inverse" : "red-inverse"}>{text}</Tag>
-      ),
+      title: "Người tạo",
+      dataIndex: "nguoiTao",
+      key: "nguoiTao",
+      render: (nguoiTao) => nguoiTao?.hoTen,
     },
     {
       title: "Action",
@@ -115,16 +118,14 @@ const ManagerUser = () => {
         <Space size="middle" className="space-x-3">
           <button
             onClick={() => {
-              console.log(record.taiKhoan, accessToken);
-              nguoiDungService
-                .deleteUser(record.taiKhoan, accessToken)
+              // Thêm xử lý xóa khóa học
+              khoaHocService
+                .deleteCourse(record.maKhoaHoc, accessToken)
                 .then((res) => {
-                  console.log(res);
-                  showNotification("Xoá thành công", "success");
+                  showNotification("Xóa khóa học thành công", "success");
                   onFinish();
                 })
                 .catch((err) => {
-                  console.log(err);
                   showNotification(err.response.data, "error");
                 });
             }}
@@ -133,7 +134,7 @@ const ManagerUser = () => {
             Xoá
           </button>
           <button
-            className="bg-yellow-500/85 text-white py-2 px-5 "
+            className="bg-yellow-500/85 text-white py-2 px-5"
             onClick={() => {
               showModal(record);
             }}
@@ -155,7 +156,7 @@ const ManagerUser = () => {
       <div className="mb-4 flex justify-between">
         <FormSearchProduct
           className="mx-0"
-          title="Tìm kiếm người dùng..."
+          title="Tìm kiếm khóa học..."
           onSearch={handleSearch}
         />
         <button
@@ -164,24 +165,24 @@ const ManagerUser = () => {
           }}
           className="bg-yellow-500/85 font-semibold rounded-md py-2 px-5"
         >
-          Thêm người dùng
+          Thêm khóa học
         </button>
       </div>
 
-      <FormAddItem
+      <FormAddCourse
         isModalOpen={isModalOpen}
         handleCancel={handleCancel}
         onFinish={onFinish}
-        userData={selectedUser}
+        courseData={selectedCourse}
       />
 
       <Table
         columns={columns}
-        dataSource={filteredUsers}
+        dataSource={filteredCourses}
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: filteredUsers.length,
+          total: filteredCourses.length,
         }}
         onChange={handleTableChange}
       />
@@ -189,4 +190,4 @@ const ManagerUser = () => {
   );
 };
 
-export default ManagerUser;
+export default ManagerCourse;
