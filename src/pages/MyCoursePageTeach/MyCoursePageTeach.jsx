@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Card, Modal, Form, Input, message, Image } from "antd";
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import FormAddCourse from "../../components/FormAddItem/FormAddCourse";
-
+import { khoaHocService } from "../../services/khoaHoc.service";
+import { nguoiDungService } from "../../services/nguoiDung.service";
+import { NotificationContext } from "../../App";
+import { getLocalStorage } from "../../utils/utils";
 const MyCoursePageTeach = () => {
+  const { showNotification } = useContext(NotificationContext);
+  const { accessToken } = getLocalStorage("user");
   const [courses, setCourses] = useState([
     {
       id: 1,
@@ -38,6 +43,17 @@ const MyCoursePageTeach = () => {
   };
 
   const onFinish = () => {
+    nguoiDungService
+      .infoAccount(accessToken)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+        showNotification("Thêm khóa học thành công", "success");
+      })
+      .catch((err) => {
+        console.log(err);
+        showNotification("Thêm khóa học thất bại", "error");
+      });
     // Refresh the courses list after adding/updating
     // You might want to fetch the updated list from your API here
   };

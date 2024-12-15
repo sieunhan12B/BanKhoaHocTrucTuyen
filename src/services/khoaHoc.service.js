@@ -9,43 +9,42 @@ export const khoaHocService = {
   },
   getCourseByCategory: (maDanhMuc) => {
     return http.get(
-      `/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=${maDanhMuc}`
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoDanhMuc/${maDanhMuc}`
     );
   },
   getCourseDetail: (maKhoaHoc) => {
-    return http.get(`/QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=${maKhoaHoc}`);
+    return http.get(
+      `/QuanLyKhoaHoc/LayThongTinKhoaHocTheoMaKhoaHoc/${maKhoaHoc}`
+    );
+  },
+  getCourseByName: (tenKhoaHoc) => {
+    return http.get(
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoTenKhoaHoc/${tenKhoaHoc}`
+    );
   },
   getCoursePhanTrang: (page, limit) => {
     return http.get(
       `/QuanLyKhoaHoc/LayDanhSachKhoaHoc_PhanTrang?pageIndex=${page}&pageSize=${limit}`
     );
   },
-  addCourse: (data, token) => {
+  addCourse: (data) => {
     return http.post("/QuanLyKhoaHoc/ThemKhoaHoc", data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
   },
-  deleteCourse: (maKhoaHoc, token) => {
-    return http.delete(`/QuanLyKhoaHoc/XoaKhoaHoc?maKhoaHoc=${maKhoaHoc}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  deleteCourse: (maKhoaHoc) => {
+    return http.delete(`/QuanLyKhoaHoc/XoaKhoaHoc/${maKhoaHoc}`);
   },
-  updateCourse: (data, token) => {
+  updateCourse: (data) => {
     return http.put("/QuanLyKhoaHoc/CapNhatKhoaHoc", data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
   },
-  registerCourse: (data, token) => {
-    return http.post("/QuanLyKhoaHoc/GhiDanhKhoaHoc", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  registerCourse: (data) => {
+    return http.post("/QuanLyKhoaHoc/GhiDanhKhoaHoc", data);
   },
 };

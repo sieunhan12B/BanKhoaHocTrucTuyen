@@ -211,7 +211,7 @@ const StudentTemplate = () => {
               <div className="hidden lg:flex flex-col">
                 <h3 className="text-lg font-semibold">{user?.hoTen}</h3>
                 <p className="text-sm text-gray-600">
-                  {user.maLoaiNguoiDung === "HV" ? "Học viên" : "Giảng viên"}
+                  {user.role === "HV" ? "Học viên" : "Giảng viên"}
                 </p>
               </div>
             </div>

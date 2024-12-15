@@ -27,14 +27,14 @@ const LogInPage = () => {
         .logIn(values)
         .then((res) => {
           console.log(res.data);
-          setLocalStorage("user", res.data);
+          setLocalStorage("user", res.data.data);
           showNotification("Đăng nhập thành công", "success");
           setTimeout(() => {
             navigate(path.homePage);
           }, 1000);
         })
         .catch((err) => {
-          showNotification(err.response.data, "error");
+          showNotification(err.response.data.message, "error");
         });
     },
   });

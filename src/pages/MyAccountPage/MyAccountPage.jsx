@@ -1,31 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import InputCustom from "../../components/Input/InputCustom";
 import { Image } from "antd";
 import { getLocalStorage } from "../../utils/utils";
 import FormAddItem from "../../components/FormAddItem/FormAddItem";
 import { nguoiDungService } from "../../services/nguoiDung.service";
-
+import { useNavigate } from "react-router-dom";
+import { path } from "../../common/path";
+import { NotificationContext } from "../../App";
 const MyAccountPage = () => {
+  const { showNotification } = useContext(NotificationContext);
   const user = getLocalStorage("user");
-  console.log(user.accessToken);
-  useEffect(() => {
-    if (!user || !user.accessToken) {
-      console.log("Không tìm thấy thông tin đăng nhập");
-      return;
-    }
+  const navigate = useNavigate();
+  console.log(user);
+  // useEffect(() => {
+  //   if (!user) {
+  //     console.log("Không tìm thấy thông tin đăng nhập");
+  //     return;
+  //   }
 
-    nguoiDungService
-      .infoAccount(user.accessToken)
-      .then((res) => {
-        console.log("Thông tin tài khoản:", res.data);
-      })
-      .catch((err) => {
-        console.log("Lỗi khi lấy thông tin:", err);
-        if (err.response?.status === 401) {
-          console.log("Token không hợp lệ hoặc đã hết hạn");
-        }
-      });
-  }, []);
+  //   nguoiDungService
+  //     .infoAccount(user.taiKhoan)
+  //     .then((res) => {
+  //       console.log("Thông tin tài khoản:", res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Lỗi khi lấy thông tin:", err);
+  //       if (err.response?.status === 401) {
+  //         console.log("Token không hợp lệ hoặc đã hết hạn");
+  //       }
+  //     });
+  // }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const mappedUserData = {
@@ -43,7 +47,13 @@ const MyAccountPage = () => {
   };
 
   const handleUpdateSuccess = () => {
-    window.location.reload();
+    showNotification(
+      "Cập nhật người dùng thành công, trở về trang đăng nhập trong vòng 2s nữa",
+      "success"
+    );
+    setTimeout(() => {
+      navigate(path.logIn);
+    }, 2000);
   };
 
   return (
@@ -146,7 +156,7 @@ const MyAccountPage = () => {
             name="password"
             placeholder="Nhập mật khẩu"
             value={user?.matKhau || ""}
-            type="password"
+            typeInput="password"
           />
 
           <InputCustom
@@ -154,9 +164,9 @@ const MyAccountPage = () => {
             id="phone"
             name="phone"
             placeholder="Nhập số điện thoại"
-            value={user?.soDT || ""}
+            value={user?.sdt || ""}
           />
-          <div className="w-full col-span-1 md:col-span-2">
+          {/* <div className="w-full col-span-1 md:col-span-2">
             <label
               htmlFor="aboutMe"
               className="block mb-2 text-sm font-medium text-gray-900"
@@ -170,7 +180,7 @@ const MyAccountPage = () => {
               className="border-2 border-gray-300 rounded-md p-2 w-full h-24 sm:h-32"
               value={user?.moTa || ""}
             ></textarea>
-          </div>
+          </div> */}
         </div>
       </div>
       <FormAddItem

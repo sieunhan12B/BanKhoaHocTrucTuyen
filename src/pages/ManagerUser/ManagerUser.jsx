@@ -20,9 +20,10 @@ const ManagerUser = () => {
     nguoiDungService
       .getListUser()
       .then((res) => {
+        console.log(res);
         showNotification("Lấy dữ liệu người dùng thành công", "success");
-        setListNguoiDung(res.data);
-        setFilteredUsers(res.data);
+        setListNguoiDung(res.data.data);
+        setFilteredUsers(res.data.data);
       })
       .catch((err) => {
         showNotification("Không thể lấy dữ liệu người dùng", "error");
@@ -60,8 +61,8 @@ const ManagerUser = () => {
       .getListUser()
       .then((res) => {
         showNotification("Dữ liệu đã được cập nhật", "success");
-        setListNguoiDung(res.data);
-        setFilteredUsers(res.data);
+        setListNguoiDung(res.data.data);
+        setFilteredUsers(res.data.data);
       })
       .catch((err) => {
         showNotification("Không thể cập nhật dữ liệu", "error");
@@ -81,19 +82,14 @@ const ManagerUser = () => {
     },
 
     {
-      title: "số điện thoại ",
-      dataIndex: "soDt",
-      key: "soDt",
-    },
-    {
       title: "tài khoản",
       dataIndex: "taiKhoan",
       key: "taiKhoan",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "mật khẩu",
+      dataIndex: "matKhau",
+      key: "matKhau",
     },
     {
       title: "Họ tên",
@@ -101,9 +97,19 @@ const ManagerUser = () => {
       key: "hoTen",
     },
     {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "số điện thoại ",
+      dataIndex: "sdt",
+      key: "sdt",
+    },
+    {
       title: "role",
-      dataIndex: "maLoaiNguoiDung",
-      key: "maLoaiNguoiDung",
+      dataIndex: "role",
+      key: "role",
       render: (text) => (
         <Tag color={text == "HV" ? "cyan-inverse" : "red-inverse"}>{text}</Tag>
       ),
@@ -115,9 +121,9 @@ const ManagerUser = () => {
         <Space size="middle" className="space-x-3">
           <button
             onClick={() => {
-              console.log(record.taiKhoan, accessToken);
+              console.log(record.taiKhoan);
               nguoiDungService
-                .deleteUser(record.taiKhoan, accessToken)
+                .deleteUser(record.taiKhoan)
                 .then((res) => {
                   console.log(res);
                   showNotification("Xoá thành công", "success");

@@ -1,6 +1,6 @@
 export const path = {
   homePage: "/",
-  category: "/category/:categoryName",
+  category: "/category/:maDanhMuc",
   pageNotFound: "*",
   signUp: "/sign-up",
   logIn: "/log-in",
@@ -12,6 +12,7 @@ export const path = {
   // listJob: "/list-job",
   // admin: "/admin",
   managerUser: "manager-user",
+  managerCategory: "manager-category",
   // createUser: "create-user",
   // register: "/dang-ki",
   // adminLogIn: "/admin-login",
@@ -25,5 +26,5 @@ export const path = {
   myLearning: "my-learning",
   coursesDetail: "courses-detail/:id",
   managerCourse: "manager-course",
-  
+  cart: "cart",
 };

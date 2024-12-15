@@ -5,28 +5,28 @@ import InputCustom from "../Input/InputCustom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { getLocalStorage } from "../../utils/utils";
 import { NotificationContext } from "../../App";
-
+import { path } from "../../common/path";
 const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
   const { showNotification } = useContext(NotificationContext);
-  const { accessToken } = getLocalStorage("user");
-
   const formik = useFormik({
     initialValues: {
       taiKhoan: "",
       matKhau: "",
       hoTen: "",
       email: "",
-      soDt: "",
-      maLoaiNguoiDung: "",
-      maNhom: "GP01",
+      sdt: "",
+      role: "HV",
     },
     onSubmit: (values) => {
+      values.taiKhoan = values.taiKhoan.trim(); // Loại bỏ khoảng trắng đầu cuối
+
       if (userData) {
         // Update existing user
         nguoiDungService
-          .updateUser(values, accessToken)
+          .updateUser(values)
           .then((res) => {
             showNotification("Cập nhật người dùng thành công", "success");
+
             setTimeout(() => {
               handleCancel();
               onFinish();
@@ -38,7 +38,7 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
       } else {
         // Add new user
         nguoiDungService
-          .addUser(values, accessToken)
+          .addUser(values)
           .then((res) => {
             showNotification("Thêm người dùng thành công", "success");
             setTimeout(() => {
@@ -59,7 +59,6 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
       formik.setValues({
         ...userData,
         matKhau: "", // Clear password for security
-        maNhom: userData.maNhom || "GP01",
       });
     } else {
       formik.resetForm();
@@ -79,9 +78,10 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
           id="taiKhoan"
           name="taiKhoan"
           placeholder="Nhập tài khoản"
-          classWrapper="mb-4"
+          classWrapper={userData ? "mb-4" : "mb-4"}
           onChange={formik.handleChange}
           value={formik.values.taiKhoan}
+          readOnly={userData ? true : false}
         />
 
         <InputCustom
@@ -118,29 +118,32 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
 
         <InputCustom
           labelContent="Số điện thoại"
-          id="soDt"
-          name="soDt"
+          id="sdt"
+          name="sdt"
           placeholder="Nhập số điện thoại"
           classWrapper="mb-4"
           onChange={formik.handleChange}
-          value={formik.values.soDt}
+          value={formik.values.sdt}
         />
 
-        <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-gray-900">
-            Loại người dùng
-          </label>
-          <select
-            name="maLoaiNguoiDung"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            onChange={formik.handleChange}
-            value={formik.values.maLoaiNguoiDung}
-          >
-            <option value="">Chọn loại người dùng</option>
-            <option value="HV">Học viên</option>
-            <option value="GV">Giáo viên</option>
-          </select>
-        </div>
+        {!window.location.pathname.includes("/my-account") && (
+          <div className="mb-4">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Loại người dùng
+            </label>
+            <select
+              name="role"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              onChange={formik.handleChange}
+              value={formik.values.role}
+            >
+              <option value="HV">Học viên</option>
+
+              <option value="admin">Quản trị</option>
+              <option value="GV">Giảng viên</option>
+            </select>
+          </div>
+        )}
 
         <div className="text-right">
           <button

@@ -1,22 +1,67 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { khoaHocService } from "../../services/khoaHoc.service";
-import { Image } from "antd";
 import { getLocalStorage } from "../../utils/utils";
+import Banner from "../../components/Banner/Banner";
 import { NotificationContext } from "../../App";
+import { Link } from "react-router-dom";
+import {
+  Tabs,
+  Avatar,
+  Typography,
+  Rate,
+  Progress,
+  Button,
+  Select,
+  Image,
+  Card,
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
+const { TabPane } = Tabs;
+
+const ratings = [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0 }));
+
 const CoursesDetail = () => {
+  const [sortBy, setSortBy] = useState("newest");
+  const [filterBy, setFilterBy] = useState("all");
   const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { taiKhoan, accessToken } = getLocalStorage("user");
-  console.log(taiKhoan, accessToken);
+  // const { taiKhoan, accessToken } = getLocalStorage("user");
+  // console.log(taiKhoan, accessToken);
   const { showNotification } = useContext(NotificationContext);
+  const [imageError, setImageError] = useState(false);
+
+  const StarRating = ({ rating, count, showCount = true }) => (
+    <div className="flex items-center gap-2">
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-5 h-5 ${
+              star <= rating
+                ? "text-yellow-400 fill-yellow-400"
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+      {showCount && <span className="text-muted-foreground">({count})</span>}
+    </div>
+  );
+
+  const getRandomImage = () =>
+    `/Image/khoahoc${Math.floor(Math.random() * 6) + 1}.jpg`;
+
   useEffect(() => {
     setLoading(true);
     khoaHocService
       .getCourseDetail(id)
       .then((res) => {
-        setCourseDetail(res.data);
+        console.log(res);
+        setCourseDetail(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -26,69 +71,285 @@ const CoursesDetail = () => {
       });
   }, [id]);
 
-  const handleRegisterCourse = () => {
-    console.log(taiKhoan, id, accessToken);
-    if (!taiKhoan || !accessToken) {
-      showNotification("Vui lòng đăng nhập để đăng ký khóa học", "error");
-      return;
-    }
+  // const handleRegisterCourse = () => {
+  //   console.log(taiKhoan, id, accessToken);
+  //   if (!taiKhoan || !accessToken) {
+  //     showNotification("Vui lòng đăng nhập để đăng ký khóa học", "error");
+  //     return;
+  //   }
 
-    setLoading(true);
-    khoaHocService
-      .registerCourse({ maKhoaHoc: id, taiKhoan: taiKhoan }, accessToken)
-      .then((res) => {
-        console.log(res);
-        showNotification("Đăng ký khóa học thành công", "success");
-      })
-      .catch((err) => {
-        console.log(err);
-        showNotification(
-          err.response?.data || "Có lỗi xảy ra khi đăng ký khóa học",
-          "error"
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  //   setLoading(true);
+  //   khoaHocService
+  //     .registerCourse({ maKhoaHoc: id, taiKhoan: taiKhoan }, accessToken)
+  //     .then((res) => {
+  //       console.log(res);
+  //       showNotification("Đăng ký khóa học thành công", "success");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       showNotification(
+  //         err.response?.data || "Có lỗi xảy ra khi đăng ký khóa học",
+  //         "error"
+  //       );
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
 
   if (loading) return <div>Loading...</div>;
   if (!courseDetail) return <div>Không tìm thấy khóa học</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="course-image">
-          <Image
-            src={courseDetail.hinhAnh}
-            alt={courseDetail.tenKhoaHoc}
-            className="w-full rounded-lg shadow-lg"
-          />
+    <div className="my-10">
+      <div className=" w-full container ">
+        <div className="ml-16">
+          <Link className="flex items-center gap-2 " to="/">
+            <i className=" text-gray-400 fa-solid fa-arrow-left"></i>
+            <span className="text-xl font-bold text-gray-400">
+              Quay lại trang chủ
+            </span>
+          </Link>
         </div>
-        <div className="course-info">
-          <h1 className="text-3xl font-bold mb-4">{courseDetail.tenKhoaHoc}</h1>
-          <p className="text-gray-600 mb-4">{courseDetail.moTa}</p>
-          <div className="course-meta mb-6">
-            <p className="mb-2">
-              <span className="font-semibold">Người tạo:</span>{" "}
-              {courseDetail.nguoiTao?.hoTen}
-            </p>
-            <p className="mb-2">
-              <span className="font-semibold">Ngày tạo:</span>{" "}
-              {new Date(courseDetail.ngayTao).toLocaleDateString()}
-            </p>
-            <p className="mb-2">
-              <span className="font-semibold">Lượt xem:</span>{" "}
-              {courseDetail.luotXem}
-            </p>
+        <div className="flex w-full gap-8 justify-around ">
+          <div className="w-3/5 ml-10 placeholder-text">
+            <div className=" h-screen">
+              <h1 className="text-5xl font-bold mb-4 leading-normal">
+                Combo. Thành thạo Excel và tin học văn phòng
+              </h1>
+              <p className="text-xl mb-4">
+                Excel là một phần mềm rất phổ biến của Microsoft Office với mục
+                đích chính là tổng hợp và xử lý các dữ liệu có số lượng lớn
+                nhanh chóng, hiệu quả, và chính xác hơn nhiều lần so với làm thủ
+                công. Tuy nhiên không phải ai cũng có thể làm chủ công cụ tuyệt
+                vời này. Ngoài các kỹ năng về Word, Excel và PowerPoint thì còn
+                rất nhiều các khác. Combo này sẽ giúp học viên hiểu rõ và thành
+                thạo hơn về các ứng dụng văn phòng để áp dụng ngay vào công
+                việc, tăng năng suất làm việc.
+              </p>
+              <div className="flex items-center mb-8">
+                <Avatar
+                  size={64}
+                  icon={<UserOutlined />}
+                  className="bg-blue-500 mr-4"
+                >
+                  <span className="text-2xl">E</span>
+                </Avatar>
+                <Title level={4} className="m-0">
+                  Edumall
+                </Title>
+              </div>
+            </div>
+            <div className="">
+              {/* New section for related courses */}
+
+              <div className="  mx-auto mt-8">
+                <h2 className="text-2xl font-bold mb-4">
+                  Các khóa học trong lộ trình học tập này
+                </h2>
+                <div className="w-full gap-4 space-y-4">
+                  <div className="border w-full rounded-lg p-4 shadow-md flex items-center">
+                    <img
+                      src="/Image/khoahoc1.jpg"
+                      alt="Course 1"
+                      className="w-1/3 h-32 object-cover rounded-md mb-2"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold">
+                        Làm chủ các kỹ năng tin học căn bản
+                      </h3>
+                      <p className="text-gray-600">bởi Đinh Hồng Linh</p>
+                      <p className="text-gray-500">
+                        82 Bài học • 12 giờ 46 phút
+                      </p>
+                      <p className="text-yellow-500">4.7 ★</p>
+                    </div>
+                  </div>
+                  <div className="border w-full rounded-lg p-4 shadow-md flex items-center">
+                    <img
+                      src="/Image/khoahoc1.jpg"
+                      alt="Course 2"
+                      className="w-1/3 h-32 object-cover rounded-md mb-2"
+                    />
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold">
+                        85 chuyên đề Excel
+                      </h3>
+                      <p className="text-gray-600">bởi Đinh Hồng Linh</p>
+                      <p className="text-gray-500">
+                        104 Bài học • 13 giờ 1 phút
+                      </p>
+                      <p className="text-yellow-500">4.7 ★</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* New section for learning outcomes and skills */}
+
+              <div className="mt-8">
+                <h2 className="text-2xl font-bold mb-4">
+                  Bạn sẽ học được những gì
+                </h2>
+                <ul className="list-disc list-inside mb-4">
+                  <li>
+                    Các bài giảng được thiết kế theo dạng cầm tay chỉ việc, học
+                    viên có thể thực hành, áp dụng được ngay vào trong công việc
+                  </li>
+                  <li>
+                    Khóa học như một cuốn sách tra cứu các thủ thuật, giúp dễ
+                    dàng cho bạn khi cần xem lại và sử dụng
+                  </li>
+                  <li>Có thể áp dụng được ngay vào trong công việc</li>
+                  <li>
+                    Thành thạo các thủ thuật, cách giải quyết các vấn đề gặp
+                    phải trong Excel
+                  </li>
+                  <li>
+                    Hiểu được bản chất của cell (ô tính), thành phần quan trọng
+                    nhất của Excel, từ đó giúp bạn tự tin khi sử dụng Excel
+                  </li>
+                </ul>
+
+                <h2 className="text-2xl font-bold mb-4">
+                  Những kỹ năng bạn sẽ đạt được
+                </h2>
+                <p className="mb-2">
+                  Excel, Kỹ năng chuyên ngành, Tin học văn phòng
+                </p>
+              </div>
+            </div>
+            <div className="w-full ">
+              <Tabs defaultActiveKey="excel" size="large" className="mb-8">
+                <TabPane tab="Excel" key="excel" />
+                <TabPane tab="Kĩ năng chuyên ngành" key="skills" />
+                <TabPane tab="Tin học văn phòng" key="office" />
+              </Tabs>
+
+              <div className="bg-white rounded-lg shadow-md p-8">
+                <div className="flex items-center mb-8">
+                  <Avatar
+                    size={64}
+                    icon={<UserOutlined />}
+                    className="bg-blue-500 mr-4"
+                  >
+                    <span className="text-2xl">E</span>
+                  </Avatar>
+                  <Title level={4} className="m-0">
+                    Edumall
+                  </Title>
+                </div>
+
+                <Title level={3} className="mb-8">
+                  Đánh giá
+                </Title>
+
+                <div className="flex mb-8">
+                  <div className="text-center mr-12">
+                    <Title level={1} className="mb-2">
+                      5
+                    </Title>
+                    <Rate disabled defaultValue={5} className="text-2xl" />
+                    <Text type="secondary" className="block mt-2 text-lg">
+                      0 Đánh giá
+                    </Text>
+                  </div>
+
+                  <div className="flex-1">
+                    {ratings.map(({ stars, count }) => (
+                      <div key={stars} className="flex items-center mb-4">
+                        <Rate
+                          disabled
+                          defaultValue={stars}
+                          className="text-lg mr-4"
+                        />
+                        <Progress
+                          percent={0}
+                          showInfo={false}
+                          className="flex-1 mr-4"
+                        />
+                        <Text type="secondary" className="min-w-[50px] text-lg">
+                          (0)
+                        </Text>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  className="bg-yellow-500 mb-8 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                  // onClick={handleRegisterCourse}
+                  disabled={loading}
+                >
+                  đánh giá
+                </button>
+
+                <div className="flex space-x-4">
+                  <Select
+                    defaultValue="newest"
+                    style={{ width: 200 }}
+                    onChange={setSortBy}
+                    size="large"
+                    options={[
+                      { value: "newest", label: "Mới nhất" },
+                      { value: "oldest", label: "Cũ nhất" },
+                    ]}
+                  />
+                  <Select
+                    defaultValue="all"
+                    style={{ width: 200 }}
+                    onChange={setFilterBy}
+                    size="large"
+                    options={[
+                      { value: "all", label: "Tất cả đánh giá" },
+                      ...ratings.map(({ stars }) => ({
+                        value: stars.toString(),
+                        label: `${stars} sao`,
+                      })),
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <button
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            onClick={handleRegisterCourse}
-            disabled={loading}
-          >
-            {loading ? "Đang xử lý..." : "Đăng ký khóa học"}
-          </button>
+          <div className=" w-2/5 course-card">
+            <Card className="rounded-lg shadow-md sticky top-0 max-w-md">
+              <div className="course-image">
+                <Image
+                  src={`http://localhost:8080/Image/${courseDetail.hinhAnh}`}
+                  alt={courseDetail.tenKhoaHoc}
+                  className="w-full rounded-lg"
+                  onError={() => setImageError(true)}
+                />
+              </div>
+              <div className="course-info">
+                <h1 className="text-3xl font-bold mb-4">
+                  {courseDetail.tenKhoaHoc}
+                </h1>
+                <p className="text-gray-600 mb-4">{courseDetail.moTa}</p>
+                <div className="course-meta mb-6">
+                  <p className="mb-2">
+                    <span className="font-semibold">Người tạo:</span>{" "}
+                    {courseDetail.nguoiTao}
+                  </p>
+                  <p className="mb-2">
+                    <span className="font-semibold">Ngày tạo:</span>{" "}
+                    {new Date(courseDetail.ngayTao).toLocaleDateString()}
+                  </p>
+                  <p className="mb-2">
+                    <span className="font-semibold">Giá tiền :</span>{" "}
+                    {courseDetail.giaTien}
+                  </p>
+                </div>
+                <button
+                  className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                  // onClick={handleRegisterCourse}
+                  disabled={loading}
+                >
+                  {loading ? "Đang xử lý..." : "Đăng ký khóa học"}
+                </button>
+              </div>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

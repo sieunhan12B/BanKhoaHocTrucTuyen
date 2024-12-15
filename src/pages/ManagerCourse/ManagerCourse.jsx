@@ -6,7 +6,8 @@ import FormSearchProduct from "../../components/FormSearchProduct/FormSearchProd
 import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
 import { khoaHocService } from "../../services/khoaHoc.service";
 import FormAddCourse from "../../components/FormAddItem/FormAddCourse";
-import { getLocalStorage } from "../../utils/utils";
+// import { danhMucService } from "../../services/danhMuc.service";
+
 const ManagerCourse = () => {
   const [listCourses, setListCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -15,7 +16,6 @@ const ManagerCourse = () => {
   const [pageSize, setPageSize] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { accessToken } = getLocalStorage("user");
   useEffect(() => {
     // Thêm service call API get courses ở đây
     khoaHocService
@@ -23,8 +23,8 @@ const ManagerCourse = () => {
       .then((res) => {
         showNotification("Lấy dữ liệu khóa học thành công", "success");
         console.log(res);
-        setListCourses(res.data);
-        setFilteredCourses(res.data);
+        setListCourses(res.data.data);
+        setFilteredCourses(res.data.data);
       })
       .catch((err) => {
         showNotification("Lấy dữ liệu khóa học thất bại", "error");
@@ -33,6 +33,7 @@ const ManagerCourse = () => {
 
   const handleSearch = (searchTerm) => {
     const filtered = listCourses.filter((course) => {
+      console.log(course);
       const normalizedName = removeVietnameseTones(course.tenKhoaHoc)
         .toLowerCase()
         .trim();
@@ -54,8 +55,9 @@ const ManagerCourse = () => {
     khoaHocService
       .getCourse()
       .then((res) => {
-        setListCourses(res.data);
-        setFilteredCourses(res.data);
+        console.log(res);
+        setListCourses(res.data.data);
+        setFilteredCourses(res.data.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
       })
       .catch((err) => {
@@ -75,7 +77,7 @@ const ManagerCourse = () => {
       ),
     },
     {
-      title: "ID",
+      title: "Mã khóa học",
       dataIndex: "maKhoaHoc",
       key: "maKhoaHoc",
     },
@@ -85,31 +87,41 @@ const ManagerCourse = () => {
       key: "tenKhoaHoc",
     },
     {
-      title: "Lượt xem  ",
-      dataIndex: "luotXem",
-      key: "luotXem",
+      title: "Giá tiền",
+      dataIndex: "giaTien",
+      key: "giaTien",
+      render: (giaTien) => `${giaTien.toLocaleString()} VNĐ`,
     },
-    // {
-    //   title: "Hình ảnh",
-    //   dataIndex: "hinhAnh",
-    //   key: "hinhAnh",
-    //   render: (hinhAnh) => (
-    //     console.log(hinhAnh),
-    //     (
-    //       <Image
-    //         width={100}
-    //         src={hinhAnh}
-    //         alt="Hình ảnh khóa học"
-    //         // className="w-20 h-20"
-    //       />
-    //     )
-    //   ),
-    // },
+    {
+      title: "Hình ảnh",
+      dataIndex: "hinhAnh",
+      key: "hinhAnh",
+      render: (hinhAnh) => (
+        <Image
+          width={100}
+          alt="hinhAnh"
+          src={`http://localhost:8080/Image/${hinhAnh}`}
+          className="w-20 h-20"
+        />
+      ),
+    },
     {
       title: "Người tạo",
       dataIndex: "nguoiTao",
       key: "nguoiTao",
-      render: (nguoiTao) => nguoiTao?.hoTen,
+      render: (nguoiTao) => nguoiTao,
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "ngayTao",
+      key: "ngayTao",
+      render: (ngayTao) => ngayTao,
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "moTa",
+      key: "moTa",
+      render: (moTa) => moTa,
     },
     {
       title: "Action",
@@ -118,15 +130,19 @@ const ManagerCourse = () => {
         <Space size="middle" className="space-x-3">
           <button
             onClick={() => {
+              console.log(record.maKhoaHoc);
+
               // Thêm xử lý xóa khóa học
               khoaHocService
-                .deleteCourse(record.maKhoaHoc, accessToken)
+                .deleteCourse(record.maKhoaHoc)
                 .then((res) => {
+                  console.log(res);
                   showNotification("Xóa khóa học thành công", "success");
                   onFinish();
                 })
                 .catch((err) => {
-                  showNotification(err.response.data, "error");
+                  console.log(err);
+                  showNotification("không xóa được ", "error");
                 });
             }}
             className="bg-red-500/85 text-white py-2 px-5"

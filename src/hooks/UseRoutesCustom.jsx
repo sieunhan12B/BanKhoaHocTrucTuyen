@@ -18,6 +18,8 @@ import AdminTemplate from "../templates/AdminTemplate/AdminTemplate";
 import ManagerUser from "../pages/ManagerUser/ManagerUser";
 import ManagerCourse from "../pages/ManagerCourse/ManagerCourse";
 import MyCoursePageTeach from "../pages/MyCoursePageTeach/MyCoursePageTeach";
+import CartPage from "../pages/CartPage/CartPage";
+import ManagerCategory from "../pages/ManagerCategory/ManagerCategory";
 const UseRoutesCustom = () => {
   const routes = useRoutes([
     {
@@ -28,10 +30,10 @@ const UseRoutesCustom = () => {
           index: true,
           element: <HomePage />,
         },
-        // {
-        //   path: path.myLearning,
-        //   element: <MyLearningPage />,
-        // },
+        {
+          path: path.myLearning,
+          element: <MyLearningPage />,
+        },
         {
           path: path.blog,
           element: <BlogPage />,
@@ -47,6 +49,10 @@ const UseRoutesCustom = () => {
         {
           path: path.coursesDetail,
           element: <CoursesDetail />,
+        },
+        {
+          path: path.cart,
+          element: <CartPage />,
         },
       ],
     },
@@ -80,20 +86,20 @@ const UseRoutesCustom = () => {
         // },
       ],
     },
-    {
-      path: path.teacher,
-      element: <TeacherTemplate />,
-      children: [
-        {
-          path: path.myCourse,
-          element: <MyCoursePageTeach />,
-        },
-        {
-          path: path.myAccount,
-          element: <MyAccountPage />,
-        },
-      ],
-    },
+    // {
+    //   path: path.teacher,
+    //   element: <TeacherTemplate />,
+    //   children: [
+    //     {
+    //       path: path.myCourse,
+    //       element: <MyCoursePageTeach />,
+    //     },
+    //     {
+    //       path: path.myAccount,
+    //       element: <MyAccountPage />,
+    //     },
+    //   ],
+    // },
     {
       path: path.admin,
       element: <AdminTemplate />,
@@ -105,6 +111,10 @@ const UseRoutesCustom = () => {
         {
           path: path.managerCourse,
           element: <ManagerCourse />,
+        },
+        {
+          path: path.managerCategory,
+          element: <ManagerCategory />,
         },
       ],
     },

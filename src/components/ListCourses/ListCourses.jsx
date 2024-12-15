@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Image, Rate, Pagination, Spin } from "antd";
+import { Image, Pagination, Spin } from "antd";
 
 const ListCourses = ({ data, loading }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,7 +10,6 @@ const ListCourses = ({ data, loading }) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCourses = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Thêm useEffect để reset page khi data thay đổi
   useEffect(() => {
     setCurrentPage(1);
   }, [data]);
@@ -18,37 +17,42 @@ const ListCourses = ({ data, loading }) => {
     setCurrentPage(page);
   };
 
-  const CourseCard = ({ course }) => (
-    <Link key={course.maKhoaHoc} to={`/courses-detail/${course.maKhoaHoc}`}>
+  const CourseCard = ({ data }) => (
+    <Link
+      className="w-full shadow-md p-2"
+      key={data.maKhoaHoc}
+      to={`/courses-detail/${data.maKhoaHoc}`}
+    >
       <div className="course-card group">
         <div className="relative overflow-hidden rounded-lg mb-3">
           <Image
-            src={course.hinhAnh || "/Image/khoahoc.png"}
-            alt={course.tenKhoaHoc}
-            className="w-full aspect-video object-cover transition-transform duration-300 group-hover:scale-105"
+            src={`http://localhost:8080/Image/${data.hinhAnh}`}
+            alt={data.tenKhoaHoc}
+            className="w-full rounded-lg shadow-lg"
+            onError={() => setImageError(true)}
             preview={false}
           />
         </div>
 
         <div className="space-y-2">
           <h3 className="text-gray-800 font-medium line-clamp-2 min-h-[40px]">
-            {course.tenKhoaHoc}
+            {data.tenKhoaHoc}
           </h3>
 
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Rate
               disabled
-              defaultValue={course.danhGia || 5}
+              defaultValue={data.danhGia || 5}
               className="text-sm text-yellow-400"
             />
             <span className="text-gray-500 text-sm">
-              ({course.luotXem || 0})
+              ({data.luotXem || 0})
             </span>
-          </div>
+          </div> */}
 
           <div className="flex justify-between items-center">
             <span className="text-yellow-500 font-medium">
-              {course.hocPhi || "Miễn phí"}
+              {data.giaTien || "Miễn phí"}
             </span>
             <button className="px-4 py-1 text-sm bg-yellow-100 text-yellow-600 rounded-full hover:bg-yellow-200 transition-colors">
               Chi tiết
@@ -74,10 +78,10 @@ const ListCourses = ({ data, loading }) => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-            {currentCourses.map((course) => (
-              <CourseCard key={course.maKhoaHoc} course={course} />
-            ))}
+          <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            {currentCourses.map((course) => {
+              return <CourseCard key={course.maKhoaHoc} data={course} />;
+            })}
           </div>
 
           <Pagination

@@ -22,7 +22,7 @@ const AvatarMenu = () => {
       label: "Thông tin cá nhân",
       onClick: () =>
         navigate(
-          user.maLoaiNguoiDung === "GV"
+          user.role === "GV"
             ? `${path.teacher}/${path.myAccount}`
             : `${path.student}/${path.myAccount}`
         ),
@@ -31,6 +31,11 @@ const AvatarMenu = () => {
       key: "2",
       label: "Đăng xuất",
       onClick: handleLogout,
+    },
+    {
+      key: "3",
+      label: "Quản lý người dùng",
+      onClick: () => navigate(`${path.admin}/${path.managerUser}`),
     },
   ];
   const guestMenuItems = [

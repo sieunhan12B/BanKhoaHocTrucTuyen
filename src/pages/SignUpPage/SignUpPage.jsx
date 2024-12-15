@@ -18,8 +18,7 @@ const SignUpPage = () => {
       xacNhanMatKhau: "",
       hoTen: "",
       email: "",
-      soDT: "",
-      maNhom: "GP01",
+      sdt: "",
     },
     onSubmit: (values) => {
       nguoiDungService
@@ -102,9 +101,9 @@ const SignUpPage = () => {
               labelContent="Số điện thoại"
               placeholder="Nhập số điện thoại của bạn"
               typeInput="tel"
-              name="soDT"
+              name="sdt"
               onChange={formik.handleChange}
-              value={formik.values.soDT}
+              value={formik.values.sdt}
             />
 
             <button

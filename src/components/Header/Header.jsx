@@ -10,6 +10,7 @@ import { getLocalStorage } from "../../utils/utils";
 import CartIcon from "../Icons/CartIcon";
 import NotifyIcon from "../Icons/NotifyIcon";
 import LanguageIcon from "../Icons/LanguageIcon";
+import FormSearchCourse from "../FormAddItem/FormSearchCourse";
 import CustomDropdownHeader from "../CustomDropdownHeader/CustomDropdownHeader";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,7 +40,7 @@ const Header = () => {
 
             {/* Menu navigation (PC) */}
             <div className="hidden lg:flex items-center space-x-6 mx-4">
-              <FormSearchProduct className="w-[350px]" />
+              <FormSearchCourse />
 
               <CustomDropdownHeader />
 

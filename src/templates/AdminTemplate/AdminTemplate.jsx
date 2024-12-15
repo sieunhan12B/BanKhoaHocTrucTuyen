@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { path } from "../../common/path";
 const { Header, Sider, Content } = Layout;
 import HomeIcon from "../../components/Icons/HomeIcon";
 import AvatarMenu from "../../components/AvatarMenu/AvatarMenu";
 const AdminTemplate = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  const selectedKey = location.pathname.includes(path.managerCourse)
+    ? "2"
+    : location.pathname.includes(path.managerCategory)
+    ? "3"
+    : location.pathname.includes(path.managerUser)
+    ? "1"
+    : "1";
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -19,7 +27,7 @@ const AdminTemplate = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={[selectedKey]}
           items={[
             {
               key: "1",
@@ -36,6 +44,15 @@ const AdminTemplate = () => {
               label: (
                 <Link to={`/admin/${path.managerCourse}`}>
                   Quản Lý Khóa Học{" "}
+                </Link>
+              ),
+            },
+            {
+              key: "3",
+              icon: <i className="fa-solid fa-briefcase"></i>,
+              label: (
+                <Link to={`/admin/${path.managerCategory}`}>
+                  Quản Lý Danh Mục
                 </Link>
               ),
             },

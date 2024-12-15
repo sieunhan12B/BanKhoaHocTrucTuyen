@@ -2,11 +2,12 @@ import { http } from "./config";
 
 export const nguoiDungService = {
   logIn: (data) => {
-    return http.post("/QuanLyNguoiDung/DangNhap", data);
+    return http.post("/Auth/DangNhap", data);
   },
   signUp: (data) => {
-    return http.post("/QuanLyNguoiDung/DangKy", data);
+    return http.post("/Auth/DangKy", data);
   },
+
   createUSer: (data, token) => {
     return http.post("/QuanLyNguoiDung/ThemNguoiDung", data, {
       headers: {
@@ -14,29 +15,18 @@ export const nguoiDungService = {
       },
     });
   },
+
   getListUser: () => {
     return http.get("/QuanLyNguoiDung/LayDanhSachNguoiDung");
   },
-  addUser: (data, token) => {
-    return http.post("/QuanLyNguoiDung/ThemNguoiDung", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  addUser: (data) => {
+    return http.post("/QuanLyNguoiDung/ThemNguoiDung", data);
   },
-  deleteUser: (account, token) => {
-    return http.delete(`/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${account}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  deleteUser: (account) => {
+    return http.delete(`/QuanLyNguoiDung/XoaNguoiDung/${account}`);
   },
-  updateUser: (data, token) => {
-    return http.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  updateUser: (data) => {
+    return http.put("/QuanLyNguoiDung/CapNhatThongTinNguoiDung", data);
   },
   infoAccount: (token) => {
     return http.post(

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal } from "antd";
 import { useFormik } from "formik";
 import InputCustom from "../Input/InputCustom";
@@ -6,37 +6,40 @@ import { khoaHocService } from "../../services/khoaHoc.service";
 import { getLocalStorage } from "../../utils/utils";
 import { NotificationContext } from "../../App";
 import { useLocation } from "react-router-dom";
-
+import { nguoiDungService } from "../../services/nguoiDung.service";
+import { danhMucService } from "../../services/danhMuc.service";
 const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
   const { showNotification } = useContext(NotificationContext);
   const { accessToken } = getLocalStorage("user");
   const location = useLocation();
   const user = getLocalStorage("user");
+  const [categories, setCategories] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [listUsers, setListUsers] = useState([]);
 
   const formik = useFormik({
     initialValues: {
       maKhoaHoc: "",
       tenKhoaHoc: "",
-      danhGia: 0,
-      luotXem: 0,
-      maDanhMucKhoaHoc: "",
+      // maDanhMucKhoaHoc: "",
+      giaTien: "",
       nguoiTao: "",
-      ngayTao: new Date().toISOString().split("T")[0],
-      hinhAnh:
-        "https://elearningnew.cybersoft.edu.vn/hinhanh/javascriptt_gp01.png",
-      maNhom: "GP01",
+      hinhAnh: "",
       moTa: "",
-      biDanh: "",
-      taiKhoanNguoiTao:
-        location.pathname === "/teacher/my-courses" ? user.taiKhoan : "",
+      loaiDanhMuc: "",
+      // taiKhoanNguoiTao:
+      //   location.pathname === "/teacher/my-courses" ? user.taiKhoan : "",
     },
     onSubmit: (values) => {
+      values.maKhoaHoc = values.maKhoaHoc.trim(); // Loại bỏ khoảng trắng đầu cuối
+      console.log(values);
       if (courseData) {
         console.log(courseData);
         // Update existing course
         khoaHocService
-          .updateCourse(values, accessToken)
+          .updateCourse(values)
           .then((res) => {
+            console.log(res);
             showNotification("Cập nhật khóa học thành công", "success");
             setTimeout(() => {
               handleCancel();
@@ -44,12 +47,13 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             }, 1000);
           })
           .catch((err) => {
-            showNotification(err.response.data, "error");
+            console.log(err);
+            showNotification(err.response.data.message, "error");
           });
       } else {
         // Add new course
         khoaHocService
-          .addCourse(values, accessToken)
+          .addCourse(values)
           .then((res) => {
             console.log(res);
             showNotification("Thêm khóa học thành công", "success");
@@ -59,11 +63,33 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             }, 1000);
           })
           .catch((err) => {
-            showNotification(err.response.data, "error");
+            console.log(err);
+            showNotification(err.response.data.message, "error");
           });
       }
     },
   });
+
+  useEffect(() => {
+    danhMucService
+      .getCategory()
+      .then((res) => {
+        console.log(res);
+        setCategories(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    nguoiDungService
+      .getListUser()
+      .then((res) => {
+        console.log(res.data.data);
+        setListUsers(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     if (courseData) {
@@ -97,6 +123,7 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             classWrapper="mb-4"
             onChange={formik.handleChange}
             value={formik.values.maKhoaHoc}
+            readOnly={courseData ? true : false}
           />
 
           <InputCustom
@@ -109,34 +136,65 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             value={formik.values.tenKhoaHoc}
           />
 
+          <InputCustom
+            labelContent="Giá tiền"
+            id="giaTien"
+            name="giaTien"
+            placeholder="Nhập giá tiền"
+            classWrapper="mb-4"
+            onChange={formik.handleChange}
+            value={formik.values.giaTien}
+            typeInput="number"
+          />
+
+          <InputCustom
+            labelContent="Mô tả"
+            id="moTa"
+            name="moTa"
+            placeholder="Nhập mô tả"
+            classWrapper="mb-4"
+            onChange={formik.handleChange}
+            value={formik.values.moTa}
+          />
+
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-900">
-              Danh mục khóa học
+              Loại danh mục
             </label>
             <select
-              name="maDanhMucKhoaHoc"
+              name="loaiDanhMuc"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={formik.handleChange}
-              value={formik.values.maDanhMucKhoaHoc}
+              value={formik.values.loaiDanhMuc}
             >
               <option value="">Chọn danh mục</option>
-              <option value="BackEnd">BackEnd</option>
-              <option value="FrontEnd">FrontEnd</option>
-              <option value="FullStack">FullStack</option>
-              <option value="Design">Design</option>
+              {categories.map((category) => (
+                <option key={category.maDanhMuc} value={category.maDanhMuc}>
+                  {category.tenDanhMuc}
+                </option>
+              ))}
             </select>
           </div>
 
           {location.pathname !== "/teacher/my-courses" && (
-            <InputCustom
-              labelContent="Người tạo"
-              id="taiKhoanNguoiTao"
-              name="taiKhoanNguoiTao"
-              placeholder="Nhập người tạo"
-              classWrapper="mb-4"
-              onChange={formik.handleChange}
-              value={formik.values.taiKhoanNguoiTao}
-            />
+            <div className="mb-4">
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Người tạo
+              </label>
+              <select
+                name="nguoiTao"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                onChange={formik.handleChange}
+                value={formik.values.nguoiTao}
+              >
+                <option value="">Chọn người tạo</option>
+                {listUsers.map((user) => (
+                  <option key={user.taiKhoan} value={user.taiKhoan}>
+                    {user.taiKhoan}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           <div className="mb-4 col-span-2">
@@ -147,10 +205,29 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
               type="file"
               name="hinhAnh"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              //   onChange={(event) => {
-              //     formik.setFieldValue("hinhAnh", event.currentTarget.files[0]);
-              //   }}
+              onChange={(event) => {
+                const file = event.currentTarget.files[0];
+                if (file) {
+                  console.log(file);
+                  formik.setFieldValue("hinhAnh", file);
+                  // Hiển thị hình ảnh đã chọn
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result); // Cập nhật state để lưu trữ hình ảnh
+                  };
+                  reader.readAsDataURL(file);
+                } else {
+                  setImagePreview(null);
+                }
+              }}
             />
+            {imagePreview && ( // Hiển thị hình ảnh nếu có
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 w-32 h-32 object-cover"
+              />
+            )}
           </div>
         </div>
 
