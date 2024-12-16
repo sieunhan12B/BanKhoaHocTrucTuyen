@@ -150,10 +150,8 @@ const ManagerUser = () => {
   };
 
   return (
-    <div
-      className={` w-max-[1000px]  p-4 ${isMobile ? "overflow-x-auto" : ""}`}
-    >
-      <div className={`mb-4 flex ${isMobile ? "flex-col" : "justify-between"}`}>
+    <div className={` w-max-[1000px]  p-4  overflow-x-auto `}>
+      <div className={`mb-4 flex flex-col`}>
         <FormSearchProduct
           className="mx-0 mb-4"
           title="Tìm kiếm người dùng..."
@@ -184,7 +182,7 @@ const ManagerUser = () => {
           total: filteredUsers.length,
         }}
         onChange={handleTableChange}
-        scroll={{ x: isMobile ? "100%" : undefined }}
+        scroll={{ x: "100%" }}
       />
     </div>
   );
