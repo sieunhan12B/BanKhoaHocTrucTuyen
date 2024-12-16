@@ -5,7 +5,6 @@ import { NotificationContext } from "../../App";
 import FormSearchProduct from "../../components/FormSearchProduct/FormSearchProduct";
 import FormAddItem from "../../components/FormAddItem/FormAddItem";
 import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
-import { useMediaQuery } from "react-responsive";
 
 const ManagerUser = () => {
   const [listNguoiDung, setListNguoiDung] = useState([]);
@@ -15,8 +14,6 @@ const ManagerUser = () => {
   const [pageSize, setPageSize] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
     nguoiDungService
