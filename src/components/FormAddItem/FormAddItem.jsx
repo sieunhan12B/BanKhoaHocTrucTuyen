@@ -3,10 +3,9 @@ import { Modal } from "antd";
 import { useFormik } from "formik";
 import InputCustom from "../Input/InputCustom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
-import { getLocalStorage } from "../../utils/utils";
 import { NotificationContext } from "../../App";
-import { path } from "../../common/path";
 const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
+  console.log(userData);
   const { showNotification } = useContext(NotificationContext);
   const formik = useFormik({
     initialValues: {

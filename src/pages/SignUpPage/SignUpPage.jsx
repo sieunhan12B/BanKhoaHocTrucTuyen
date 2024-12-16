@@ -6,7 +6,7 @@ import InputCustom from "../../components/Input/InputCustom";
 import { Image } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../common/path";
-import { nguoiDungService } from "../../services/nguoiDung.service";
+import { authService } from "../../services/auth.service";
 import { NotificationContext } from "../../App";
 
 const SignUpPage = () => {
@@ -21,7 +21,7 @@ const SignUpPage = () => {
       sdt: "",
     },
     onSubmit: (values) => {
-      nguoiDungService
+      authService
         .signUp(values)
         .then((res) => {
           console.log(res);

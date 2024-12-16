@@ -12,24 +12,7 @@ const MyAccountPage = () => {
   const user = getLocalStorage("user");
   const navigate = useNavigate();
   console.log(user);
-  // useEffect(() => {
-  //   if (!user) {
-  //     console.log("Không tìm thấy thông tin đăng nhập");
-  //     return;
-  //   }
 
-  //   nguoiDungService
-  //     .infoAccount(user.taiKhoan)
-  //     .then((res) => {
-  //       console.log("Thông tin tài khoản:", res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Lỗi khi lấy thông tin:", err);
-  //       if (err.response?.status === 401) {
-  //         console.log("Token không hợp lệ hoặc đã hết hạn");
-  //       }
-  //     });
-  // }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const mappedUserData = {

@@ -3,16 +3,13 @@ import { Modal } from "antd";
 import { useFormik } from "formik";
 import InputCustom from "../Input/InputCustom";
 import { khoaHocService } from "../../services/khoaHoc.service";
-import { getLocalStorage } from "../../utils/utils";
 import { NotificationContext } from "../../App";
 import { useLocation } from "react-router-dom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { danhMucService } from "../../services/danhMuc.service";
 const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
   const { showNotification } = useContext(NotificationContext);
-  const { accessToken } = getLocalStorage("user");
   const location = useLocation();
-  const user = getLocalStorage("user");
   const [categories, setCategories] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [listUsers, setListUsers] = useState([]);
@@ -21,52 +18,33 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
     initialValues: {
       maKhoaHoc: "",
       tenKhoaHoc: "",
-      // maDanhMucKhoaHoc: "",
       giaTien: "",
       nguoiTao: "",
       hinhAnh: "",
       moTa: "",
       loaiDanhMuc: "",
-      // taiKhoanNguoiTao:
-      //   location.pathname === "/teacher/my-courses" ? user.taiKhoan : "",
     },
     onSubmit: (values) => {
-      values.maKhoaHoc = values.maKhoaHoc.trim(); // Loại bỏ khoảng trắng đầu cuối
-      console.log(values);
-      if (courseData) {
-        console.log(courseData);
-        // Update existing course
-        khoaHocService
-          .updateCourse(values)
-          .then((res) => {
-            console.log(res);
-            showNotification("Cập nhật khóa học thành công", "success");
-            setTimeout(() => {
-              handleCancel();
-              onFinish();
-            }, 1000);
-          })
-          .catch((err) => {
-            console.log(err);
-            showNotification(err.response.data.message, "error");
-          });
-      } else {
-        // Add new course
-        khoaHocService
-          .addCourse(values)
-          .then((res) => {
-            console.log(res);
-            showNotification("Thêm khóa học thành công", "success");
-            setTimeout(() => {
-              handleCancel();
-              onFinish();
-            }, 1000);
-          })
-          .catch((err) => {
-            console.log(err);
-            showNotification(err.response.data.message, "error");
-          });
-      }
+      values.maKhoaHoc = values.maKhoaHoc.trim();
+      const serviceCall = courseData
+        ? khoaHocService.updateCourse
+        : khoaHocService.addCourse;
+      serviceCall(values)
+        .then((res) => {
+          showNotification(
+            courseData
+              ? "Cập nhật khóa học thành công"
+              : "Thêm khóa học thành công",
+            "success"
+          );
+          setTimeout(() => {
+            handleCancel();
+            onFinish();
+          }, 1000);
+        })
+        .catch((err) => {
+          showNotification(err.response.data.message, "error");
+        });
     },
   });
 
@@ -123,9 +101,8 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             classWrapper="mb-4"
             onChange={formik.handleChange}
             value={formik.values.maKhoaHoc}
-            readOnly={courseData ? true : false}
+            readOnly={!!courseData}
           />
-
           <InputCustom
             labelContent="Tên khóa học"
             id="tenKhoaHoc"
@@ -135,7 +112,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             onChange={formik.handleChange}
             value={formik.values.tenKhoaHoc}
           />
-
           <InputCustom
             labelContent="Giá tiền"
             id="giaTien"
@@ -146,7 +122,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             value={formik.values.giaTien}
             typeInput="number"
           />
-
           <InputCustom
             labelContent="Mô tả"
             id="moTa"
@@ -156,7 +131,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             onChange={formik.handleChange}
             value={formik.values.moTa}
           />
-
           <div className="mb-4">
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Loại danh mục
@@ -175,7 +149,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
               ))}
             </select>
           </div>
-
           {location.pathname !== "/teacher/my-courses" && (
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium text-gray-900">
@@ -196,7 +169,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
               </select>
             </div>
           )}
-
           <div className="mb-4 col-span-2">
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Hình ảnh
@@ -208,20 +180,16 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
               onChange={(event) => {
                 const file = event.currentTarget.files[0];
                 if (file) {
-                  console.log(file);
                   formik.setFieldValue("hinhAnh", file);
-                  // Hiển thị hình ảnh đã chọn
                   const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setImagePreview(reader.result); // Cập nhật state để lưu trữ hình ảnh
-                  };
+                  reader.onloadend = () => setImagePreview(reader.result);
                   reader.readAsDataURL(file);
                 } else {
                   setImagePreview(null);
                 }
               }}
             />
-            {imagePreview && ( // Hiển thị hình ảnh nếu có
+            {imagePreview && (
               <img
                 src={imagePreview}
                 alt="Preview"
@@ -230,7 +198,6 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             )}
           </div>
         </div>
-
         <div className="text-right mt-4">
           <button
             type="submit"

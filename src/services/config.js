@@ -1,6 +1,4 @@
 import axios from "axios";
-
-// NV1 : Coi và setup lại một axios custom xử lí gọi API cho dự án Sell course
 export const http = axios.create({
   baseURL: "http://localhost:8080",
   // baseURL: "https://elearningnew.cybersoft.edu.vn/api",

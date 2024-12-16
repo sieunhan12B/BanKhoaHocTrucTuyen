@@ -168,7 +168,7 @@ const ManagerCourse = () => {
   };
 
   return (
-    <div>
+    <div className="w-max-[1000px]">
       <div className="mb-4 flex justify-between">
         <FormSearchProduct
           className="mx-0"
@@ -193,6 +193,7 @@ const ManagerCourse = () => {
       />
 
       <Table
+        className="w-full max-w-full overflow-hidden"
         columns={columns}
         dataSource={filteredCourses}
         pagination={{

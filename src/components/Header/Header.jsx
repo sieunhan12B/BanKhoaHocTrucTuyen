@@ -10,12 +10,13 @@ import { getLocalStorage } from "../../utils/utils";
 import CartIcon from "../Icons/CartIcon";
 import NotifyIcon from "../Icons/NotifyIcon";
 import LanguageIcon from "../Icons/LanguageIcon";
+import { useNavigate } from "react-router-dom";
 import FormSearchCourse from "../FormAddItem/FormSearchCourse";
 import CustomDropdownHeader from "../CustomDropdownHeader/CustomDropdownHeader";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -54,7 +55,10 @@ const Header = () => {
             {/* Icon */}
             <div className="flex items-center space-x-2 lg:space-x-4">
               {user && (
-                <button className="flex items-center justify-center text-gray-600 hover:text-gray-800">
+                <button
+                  onClick={() => navigate(path.cart)}
+                  className="flex items-center justify-center text-gray-600 hover:text-gray-800"
+                >
                   <CartIcon />
                 </button>
               )}

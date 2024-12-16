@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../common/path";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { nguoiDungService } from "../../services/nguoiDung.service";
+import { authService } from "../../services/auth.service";
 import { NotificationContext } from "../../App";
 import { setLocalStorage } from "../../utils/utils";
 
@@ -23,7 +23,7 @@ const LogInPage = () => {
     onSubmit: (values) => {
       console.log(values);
       // Xử lý logic đăng ký ở đây
-      nguoiDungService
+      authService
         .logIn(values)
         .then((res) => {
           console.log(res.data);

@@ -4,9 +4,6 @@ export const khoaHocService = {
   getCourse: () => {
     return http.get("/QuanLyKhoaHoc/LayDanhSachKhoaHoc");
   },
-  getCategory: () => {
-    return http.get("/QuanLyKhoaHoc/LayDanhMucKhoaHoc");
-  },
   getCourseByCategory: (maDanhMuc) => {
     return http.get(
       `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoDanhMuc/${maDanhMuc}`
@@ -20,11 +17,6 @@ export const khoaHocService = {
   getCourseByName: (tenKhoaHoc) => {
     return http.get(
       `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoTenKhoaHoc/${tenKhoaHoc}`
-    );
-  },
-  getCoursePhanTrang: (page, limit) => {
-    return http.get(
-      `/QuanLyKhoaHoc/LayDanhSachKhoaHoc_PhanTrang?pageIndex=${page}&pageSize=${limit}`
     );
   },
   addCourse: (data) => {
@@ -43,8 +35,5 @@ export const khoaHocService = {
         "Content-Type": "multipart/form-data",
       },
     });
-  },
-  registerCourse: (data) => {
-    return http.post("/QuanLyKhoaHoc/GhiDanhKhoaHoc", data);
   },
 };

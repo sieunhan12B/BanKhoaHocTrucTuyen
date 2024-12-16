@@ -34,7 +34,7 @@ const AvatarMenu = () => {
     },
     {
       key: "3",
-      label: "Quản lý người dùng",
+      label: "Trang quản lý ",
       onClick: () => navigate(`${path.admin}/${path.managerUser}`),
     },
   ];

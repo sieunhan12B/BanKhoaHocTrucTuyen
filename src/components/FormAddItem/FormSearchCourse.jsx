@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { path } from "../../common/path";
 import { khoaHocService } from "../../services/khoaHoc.service";
 import { Dropdown, Image } from "antd";
+import { useLocation } from "react-router-dom";
 
 const FormSearchCourse = () => {
   const navigate = useNavigate();
@@ -14,12 +15,15 @@ const FormSearchCourse = () => {
       label: "Hello",
     },
   ]);
-  const dropdownRef = useRef(null);
 
+  const location = useLocation();
+  const dropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setCheckDropdown(false);
+      if (dropdownRef.current) {
+        setTimeout(() => {
+          setCheckDropdown(false);
+        }, 100);
       }
     };
 
@@ -37,59 +41,57 @@ const FormSearchCourse = () => {
 
   useEffect(() => {
     if (valueSearch) {
-      // Gọi API lấy dữ liệu sản phẩm để gợi ý người dùng
       khoaHocService
         .getCourseByName(valueSearch)
         .then((res) => {
-          console.log(res);
           const newListJobSuggest = res.data.data
             .slice(0, 4)
-            .map((item, index) => {
-              console.log(item);
-              return {
-                key: index.toString(),
-                label: (
-                  <Link
-                    to={`/courses-detail/${item.maKhoaHoc}`}
-                    className="flex items-center space-x-4"
-                  >
-                    <Image
-                      src={`http://localhost:8080/Image/${item.hinhAnh}`}
-                      className="h-14"
-                      width={100}
-                      alt=""
-                    />
-                    <div>
-                      <h4>{item.tenKhoaHoc}</h4>
-                      <p>{item.giaTien}</p>
-                    </div>
-                  </Link>
-                ),
-              };
-            });
-          console.log(newListJobSuggest);
+            .map((item, index) => ({
+              key: index.toString(),
+              label: (
+                <Link
+                  to={`/courses-detail/${item.maKhoaHoc}`}
+                  className="flex items-center space-x-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Image
+                    src={`http://localhost:8080/Image/${item.hinhAnh}`}
+                    className="h-14"
+                    width={100}
+                    alt=""
+                  />
+                  <div>
+                    <h4>{item.tenKhoaHoc}</h4>
+                    <p>{item.giaTien}</p>
+                  </div>
+                </Link>
+              ),
+            }));
           setListJobSuggest(newListJobSuggest);
           setCheckDropdown(true);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(console.log);
     }
   }, [valueSearch]);
 
   const handleChange = (event) => {
+    console.log(event.target.value);
     setValueSearch(event.target.value);
     if (!event.target.value) {
       setCheckDropdown(false);
     }
   };
+
+  useEffect(() => {
+    setCheckDropdown(false);
+  }, [location]);
+
   return (
-    <div ref={dropdownRef}>
-      <form onSubmit={handleSubmit}>
+    <div>
+      <form ref={dropdownRef} onSubmit={handleSubmit}>
         <Dropdown
-          menu={{
-            items: listJobSuggest,
-          }}
+          menu={{ items: listJobSuggest }}
+          trigger={["click"]}
           open={checkDropdown}
         >
           <div className="pl-4 rounded-md border border-gray-400 flex items-center justify-between min-w-[400px]">

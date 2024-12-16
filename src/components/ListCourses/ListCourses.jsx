@@ -39,17 +39,6 @@ const ListCourses = ({ data, loading }) => {
             {data.tenKhoaHoc}
           </h3>
 
-          {/* <div className="flex items-center space-x-2">
-            <Rate
-              disabled
-              defaultValue={data.danhGia || 5}
-              className="text-sm text-yellow-400"
-            />
-            <span className="text-gray-500 text-sm">
-              ({data.luotXem || 0})
-            </span>
-          </div> */}
-
           <div className="flex justify-between items-center">
             <span className="text-yellow-500 font-medium">
               {data.giaTien || "Miễn phí"}
@@ -78,10 +67,10 @@ const ListCourses = ({ data, loading }) => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-            {currentCourses.map((course) => {
-              return <CourseCard key={course.maKhoaHoc} data={course} />;
-            })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            {currentCourses.map((course) => (
+              <CourseCard key={course.maKhoaHoc} data={course} />
+            ))}
           </div>
 
           <Pagination

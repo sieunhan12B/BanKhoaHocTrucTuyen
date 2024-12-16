@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { khoaHocService } from "../../services/khoaHoc.service";
-import { getLocalStorage } from "../../utils/utils";
-import Banner from "../../components/Banner/Banner";
 import { NotificationContext } from "../../App";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../redux/cartSlice";
 import {
   Tabs,
   Avatar,
   Typography,
   Rate,
   Progress,
-  Button,
   Select,
   Image,
   Card,
+  Row,
+  Col,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
@@ -24,96 +24,54 @@ const { TabPane } = Tabs;
 const ratings = [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0 }));
 
 const CoursesDetail = () => {
+  const cart = useSelector((state) => state.cartSlice.cart);
   const [sortBy, setSortBy] = useState("newest");
   const [filterBy, setFilterBy] = useState("all");
   const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const { taiKhoan, accessToken } = getLocalStorage("user");
-  // console.log(taiKhoan, accessToken);
   const { showNotification } = useContext(NotificationContext);
   const [imageError, setImageError] = useState(false);
-
-  const StarRating = ({ rating, count, showCount = true }) => (
-    <div className="flex items-center gap-2">
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`w-5 h-5 ${
-              star <= rating
-                ? "text-yellow-400 fill-yellow-400"
-                : "text-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-      {showCount && <span className="text-muted-foreground">({count})</span>}
-    </div>
-  );
-
-  const getRandomImage = () =>
-    `/Image/khoahoc${Math.floor(Math.random() * 6) + 1}.jpg`;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setLoading(true);
     khoaHocService
       .getCourseDetail(id)
-      .then((res) => {
-        console.log(res);
-        setCourseDetail(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then((res) => setCourseDetail(res.data.data))
+      .catch(console.log)
+      .finally(() => setLoading(false));
   }, [id]);
 
-  // const handleRegisterCourse = () => {
-  //   console.log(taiKhoan, id, accessToken);
-  //   if (!taiKhoan || !accessToken) {
-  //     showNotification("Vui lòng đăng nhập để đăng ký khóa học", "error");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   khoaHocService
-  //     .registerCourse({ maKhoaHoc: id, taiKhoan: taiKhoan }, accessToken)
-  //     .then((res) => {
-  //       console.log(res);
-  //       showNotification("Đăng ký khóa học thành công", "success");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       showNotification(
-  //         err.response?.data || "Có lỗi xảy ra khi đăng ký khóa học",
-  //         "error"
-  //       );
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // };
+  const handleAddToCart = () => {
+    const isCourseInCart = cart.some(
+      (item) => item.maKhoaHoc === courseDetail.maKhoaHoc
+    );
+    if (isCourseInCart) {
+      showNotification("Khóa học đã có trong giỏ hàng", "info");
+    } else {
+      dispatch(addToCart(courseDetail));
+      showNotification("Thêm vào giỏ hàng thành công", "success");
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (!courseDetail) return <div>Không tìm thấy khóa học</div>;
 
   return (
-    <div className="my-10">
-      <div className=" w-full container ">
+    <div className="my-10 container px-8 mx-auto">
+      <div className="w-full">
         <div className="ml-16">
-          <Link className="flex items-center gap-2 " to="/">
-            <i className=" text-gray-400 fa-solid fa-arrow-left"></i>
-            <span className="text-xl font-bold text-gray-400">
+          <Link className="flex items-center gap-2 w-max" to="/">
+            <i className="text-gray-400 fa-solid fa-arrow-left"></i>
+            <span className="text-xl w-full font-bold text-gray-400">
               Quay lại trang chủ
             </span>
           </Link>
         </div>
-        <div className="flex w-full gap-8 justify-around ">
-          <div className="w-3/5 ml-10 placeholder-text">
-            <div className=" h-screen">
+        <div className="flex flex-wrap justify-between gap-4 max-[1280px]:flex-col">
+          <div className="placeholder-text max-[1280px]:w-full   w-3/5 order-1 max-[1280px]:order-2">
+            <div className="h-screen max-[1280px]:h-auto">
               <h1 className="text-5xl font-bold mb-4 leading-normal">
                 Combo. Thành thạo Excel và tin học văn phòng
               </h1>
@@ -122,10 +80,9 @@ const CoursesDetail = () => {
                 đích chính là tổng hợp và xử lý các dữ liệu có số lượng lớn
                 nhanh chóng, hiệu quả, và chính xác hơn nhiều lần so với làm thủ
                 công. Tuy nhiên không phải ai cũng có thể làm chủ công cụ tuyệt
-                vời này. Ngoài các kỹ năng về Word, Excel và PowerPoint thì còn
-                rất nhiều các khác. Combo này sẽ giúp học viên hiểu rõ và thành
-                thạo hơn về các ứng dụng văn phòng để áp dụng ngay vào công
-                việc, tăng năng suất làm việc.
+                vời này. Combo này sẽ giúp học viên hiểu rõ và thành thạo hơn về
+                các ứng dụng văn phòng để áp dụng ngay vào công việc, tăng năng
+                suất làm việc.
               </p>
               <div className="flex items-center mb-8">
                 <Avatar
@@ -140,24 +97,24 @@ const CoursesDetail = () => {
                 </Title>
               </div>
             </div>
-            <div className="">
-              {/* New section for related courses */}
-
-              <div className="  mx-auto mt-8">
-                <h2 className="text-2xl font-bold mb-4">
-                  Các khóa học trong lộ trình học tập này
-                </h2>
-                <div className="w-full gap-4 space-y-4">
-                  <div className="border w-full rounded-lg p-4 shadow-md flex items-center">
+            <div className="mx-auto mt-8">
+              <h2 className="text-2xl font-bold mb-4">
+                Các khóa học trong lộ trình học tập này
+              </h2>
+              <div className="w-full gap-4 space-y-4">
+                {["Course 1", "Course 2"].map((course, index) => (
+                  <div
+                    key={index}
+                    className="border w-full rounded-lg p-4 shadow-md flex items-center"
+                    style={{ marginBottom: "10px" }}
+                  >
                     <img
                       src="/Image/khoahoc1.jpg"
-                      alt="Course 1"
+                      alt={course}
                       className="w-1/3 h-32 object-cover rounded-md mb-2"
                     />
                     <div className="ml-4">
-                      <h3 className="text-lg font-semibold">
-                        Làm chủ các kỹ năng tin học căn bản
-                      </h3>
+                      <h3 className="text-lg font-semibold">{course}</h3>
                       <p className="text-gray-600">bởi Đinh Hồng Linh</p>
                       <p className="text-gray-500">
                         82 Bài học • 12 giờ 46 phút
@@ -165,66 +122,45 @@ const CoursesDetail = () => {
                       <p className="text-yellow-500">4.7 ★</p>
                     </div>
                   </div>
-                  <div className="border w-full rounded-lg p-4 shadow-md flex items-center">
-                    <img
-                      src="/Image/khoahoc1.jpg"
-                      alt="Course 2"
-                      className="w-1/3 h-32 object-cover rounded-md mb-2"
-                    />
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold">
-                        85 chuyên đề Excel
-                      </h3>
-                      <p className="text-gray-600">bởi Đinh Hồng Linh</p>
-                      <p className="text-gray-500">
-                        104 Bài học • 13 giờ 1 phút
-                      </p>
-                      <p className="text-yellow-500">4.7 ★</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* New section for learning outcomes and skills */}
-
-              <div className="mt-8">
-                <h2 className="text-2xl font-bold mb-4">
-                  Bạn sẽ học được những gì
-                </h2>
-                <ul className="list-disc list-inside mb-4">
-                  <li>
-                    Các bài giảng được thiết kế theo dạng cầm tay chỉ việc, học
-                    viên có thể thực hành, áp dụng được ngay vào trong công việc
-                  </li>
-                  <li>
-                    Khóa học như một cuốn sách tra cứu các thủ thuật, giúp dễ
-                    dàng cho bạn khi cần xem lại và sử dụng
-                  </li>
-                  <li>Có thể áp dụng được ngay vào trong công việc</li>
-                  <li>
-                    Thành thạo các thủ thuật, cách giải quyết các vấn đề gặp
-                    phải trong Excel
-                  </li>
-                  <li>
-                    Hiểu được bản chất của cell (ô tính), thành phần quan trọng
-                    nhất của Excel, từ đó giúp bạn tự tin khi sử dụng Excel
-                  </li>
-                </ul>
-
-                <h2 className="text-2xl font-bold mb-4">
-                  Những kỹ năng bạn sẽ đạt được
-                </h2>
-                <p className="mb-2">
-                  Excel, Kỹ năng chuyên ngành, Tin học văn phòng
-                </p>
+                ))}
               </div>
             </div>
-            <div className="w-full ">
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-4">
+                Bạn sẽ học được những gì
+              </h2>
+              <ul className="list-disc list-inside mb-4">
+                <li>
+                  Các bài giảng được thiết kế theo dạng cầm tay chỉ việc, học
+                  viên có thể thực hành, áp dụng được ngay vào trong công việc
+                </li>
+                <li>
+                  Khóa học như một cuốn sách tra cứu các thủ thuật, giúp dễ dàng
+                  cho bạn khi cần xem lại và sử dụng
+                </li>
+                <li>Có thể áp dụng được ngay vào trong công việc</li>
+                <li>
+                  Thành thạo các thủ thuật, cách giải quyết các vấn đề gặp phải
+                  trong Excel
+                </li>
+                <li>
+                  Hiểu được bản chất của cell (ô tính), thành phần quan trọng
+                  nhất của Excel, từ đó giúp bạn tự tin khi sử dụng Excel
+                </li>
+              </ul>
+              <h2 className="text-2xl font-bold mb-4">
+                Những kỹ năng bạn sẽ đạt được
+              </h2>
+              <p className="mb-2">
+                Excel, Kỹ năng chuyên ngành, Tin học văn phòng
+              </p>
+            </div>
+            <div className="w-full">
               <Tabs defaultActiveKey="excel" size="large" className="mb-8">
                 <TabPane tab="Excel" key="excel" />
                 <TabPane tab="Kĩ năng chuyên ngành" key="skills" />
                 <TabPane tab="Tin học văn phòng" key="office" />
               </Tabs>
-
               <div className="bg-white rounded-lg shadow-md p-8">
                 <div className="flex items-center mb-8">
                   <Avatar
@@ -238,11 +174,9 @@ const CoursesDetail = () => {
                     Edumall
                   </Title>
                 </div>
-
                 <Title level={3} className="mb-8">
                   Đánh giá
                 </Title>
-
                 <div className="flex mb-8">
                   <div className="text-center mr-12">
                     <Title level={1} className="mb-2">
@@ -253,9 +187,8 @@ const CoursesDetail = () => {
                       0 Đánh giá
                     </Text>
                   </div>
-
                   <div className="flex-1">
-                    {ratings.map(({ stars, count }) => (
+                    {ratings.map(({ stars }) => (
                       <div key={stars} className="flex items-center mb-4">
                         <Rate
                           disabled
@@ -274,15 +207,12 @@ const CoursesDetail = () => {
                     ))}
                   </div>
                 </div>
-
                 <button
                   className="bg-yellow-500 mb-8 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
-                  // onClick={handleRegisterCourse}
                   disabled={loading}
                 >
                   đánh giá
                 </button>
-
                 <div className="flex space-x-4">
                   <Select
                     defaultValue="newest"
@@ -311,9 +241,9 @@ const CoursesDetail = () => {
               </div>
             </div>
           </div>
-          <div className=" w-2/5 course-card">
-            <Card className="rounded-lg shadow-md sticky top-0 max-w-md">
-              <div className="course-image">
+          <div className="course-card w-1/3 max-[1280px]:w-full  order-2 max-[1280px]:order-1">
+            <Card className="rounded-lg w-full shadow-md sticky top-0 ">
+              <div className="course-image w-full">
                 <Image
                   src={`http://localhost:8080/Image/${courseDetail.hinhAnh}`}
                   alt={courseDetail.tenKhoaHoc}
@@ -340,13 +270,21 @@ const CoursesDetail = () => {
                     {courseDetail.giaTien}
                   </p>
                 </div>
-                <button
-                  className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
-                  // onClick={handleRegisterCourse}
-                  disabled={loading}
-                >
-                  {loading ? "Đang xử lý..." : "Đăng ký khóa học"}
-                </button>
+                <div className="flex gap-5">
+                  <button
+                    className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                    disabled={loading}
+                  >
+                    {loading ? "Đang xử lý..." : "Đăng ký khóa học"}
+                  </button>
+                  <button
+                    onClick={handleAddToCart}
+                    className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Thêm vào giỏ hàng
+                  </button>
+                </div>
               </div>
             </Card>
           </div>

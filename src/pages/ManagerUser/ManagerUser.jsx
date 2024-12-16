@@ -2,25 +2,26 @@ import React, { useContext, useEffect, useState } from "react";
 import { Space, Table, Tag } from "antd";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { NotificationContext } from "../../App";
-import { Link } from "react-router-dom";
 import FormSearchProduct from "../../components/FormSearchProduct/FormSearchProduct";
 import FormAddItem from "../../components/FormAddItem/FormAddItem";
 import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
-import { getLocalStorage } from "../../utils/utils";
+import { useMediaQuery } from "react-responsive";
+
 const ManagerUser = () => {
   const [listNguoiDung, setListNguoiDung] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const { accessToken } = getLocalStorage("user");
   const { showNotification } = useContext(NotificationContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+
   useEffect(() => {
     nguoiDungService
       .getListUser()
       .then((res) => {
-        console.log(res);
         showNotification("Lấy dữ liệu người dùng thành công", "success");
         setListNguoiDung(res.data.data);
         setFilteredUsers(res.data.data);
@@ -52,9 +53,7 @@ const ManagerUser = () => {
     setIsModalOpen(true);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const handleCancel = () => setIsModalOpen(false);
 
   const onFinish = () => {
     nguoiDungService
@@ -77,10 +76,9 @@ const ManagerUser = () => {
       width: 70,
       align: "center",
       render: (_, __, index) => (
-        <span className="">{(currentPage - 1) * pageSize + index + 1}</span>
+        <span>{(currentPage - 1) * pageSize + index + 1}</span>
       ),
     },
-
     {
       title: "tài khoản",
       dataIndex: "taiKhoan",
@@ -102,7 +100,7 @@ const ManagerUser = () => {
       key: "email",
     },
     {
-      title: "số điện thoại ",
+      title: "số điện thoại",
       dataIndex: "sdt",
       key: "sdt",
     },
@@ -111,7 +109,7 @@ const ManagerUser = () => {
       dataIndex: "role",
       key: "role",
       render: (text) => (
-        <Tag color={text == "HV" ? "cyan-inverse" : "red-inverse"}>{text}</Tag>
+        <Tag color={text === "HV" ? "cyan-inverse" : "red-inverse"}>{text}</Tag>
       ),
     },
     {
@@ -121,16 +119,13 @@ const ManagerUser = () => {
         <Space size="middle" className="space-x-3">
           <button
             onClick={() => {
-              console.log(record.taiKhoan);
               nguoiDungService
                 .deleteUser(record.taiKhoan)
-                .then((res) => {
-                  console.log(res);
+                .then(() => {
                   showNotification("Xoá thành công", "success");
                   onFinish();
                 })
                 .catch((err) => {
-                  console.log(err);
                   showNotification(err.response.data, "error");
                 });
             }}
@@ -139,10 +134,8 @@ const ManagerUser = () => {
             Xoá
           </button>
           <button
-            className="bg-yellow-500/85 text-white py-2 px-5 "
-            onClick={() => {
-              showModal(record);
-            }}
+            className="bg-yellow-500/85 text-white py-2 px-5"
+            onClick={() => showModal(record)}
           >
             Sửa
           </button>
@@ -157,17 +150,17 @@ const ManagerUser = () => {
   };
 
   return (
-    <div>
-      <div className="mb-4 flex justify-between">
+    <div
+      className={` w-max-[1000px]  p-4 ${isMobile ? "overflow-x-auto" : ""}`}
+    >
+      <div className={`mb-4 flex ${isMobile ? "flex-col" : "justify-between"}`}>
         <FormSearchProduct
-          className="mx-0"
+          className="mx-0 mb-4"
           title="Tìm kiếm người dùng..."
           onSearch={handleSearch}
         />
         <button
-          onClick={() => {
-            showModal();
-          }}
+          onClick={() => showModal()}
           className="bg-yellow-500/85 font-semibold rounded-md py-2 px-5"
         >
           Thêm người dùng
@@ -182,6 +175,7 @@ const ManagerUser = () => {
       />
 
       <Table
+        className="w-full max-w-full overflow-hidden"
         columns={columns}
         dataSource={filteredUsers}
         pagination={{
@@ -190,6 +184,7 @@ const ManagerUser = () => {
           total: filteredUsers.length,
         }}
         onChange={handleTableChange}
+        scroll={{ x: isMobile ? "100%" : undefined }}
       />
     </div>
   );
