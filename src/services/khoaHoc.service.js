@@ -36,4 +36,9 @@ export const khoaHocService = {
       },
     });
   },
+  getCourseByTeacher: (taiKhoan) => {
+    return http.get(
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoMaNguoiDung/${taiKhoan}`
+    );
+  },
 };

@@ -78,12 +78,12 @@ const BlogPage = () => {
   return (
     <div>
       <Banner
-        className={"bg-[url('/Image/banner.png')]"}
+        className={"bg-[url('/Image/bannerblog.jpg')]"}
         title1={"Bài viết"}
         title2="của chúng tôi"
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8    lg:px-8 xl:px-20 max-w-[1400px] ">
         <div className="bg-white rounded-lg overflow-hidden  mx-auto mb-12">
           <div className="flex flex-col md:flex-row-reverse">
             <img

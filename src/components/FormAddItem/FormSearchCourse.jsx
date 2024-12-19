@@ -94,7 +94,7 @@ const FormSearchCourse = () => {
           trigger={["click"]}
           open={checkDropdown}
         >
-          <div className="pl-4 rounded-md border border-gray-400 flex items-center justify-between min-w-[400px]">
+          <div className="pl-4  border border-gray-400 flex items-center justify-between min-w-[400px]">
             <input
               type="text"
               placeholder="Vui lòng nhập vào công việc cần kiếm"
@@ -102,8 +102,8 @@ const FormSearchCourse = () => {
               onChange={handleChange}
               value={valueSearch}
             />
-            <button type="submit" className="p-2">
-              Tìm kiếm
+            <button type="submit" className="py-1 px-5 m-1 bg-yellow-500">
+              <i className="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
         </Dropdown>

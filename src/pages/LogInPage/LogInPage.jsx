@@ -14,30 +14,34 @@ const LogInPage = () => {
   const { showNotification } = useContext(NotificationContext);
   const navigate = useNavigate();
   // Khởi tạo formik
-  const formik = useFormik({
-    initialValues: {
-      taiKhoan: "",
-      matKhau: "",
-    },
-    // validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      // Xử lý logic đăng ký ở đây
-      authService
-        .logIn(values)
-        .then((res) => {
-          console.log(res.data);
-          setLocalStorage("user", res.data.data);
-          showNotification("Đăng nhập thành công", "success");
-          setTimeout(() => {
-            navigate(path.homePage);
-          }, 1000);
-        })
-        .catch((err) => {
-          showNotification(err.response.data.message, "error");
-        });
-    },
-  });
+  const { handleSubmit, handleChange, values, errors, touched, handleBlur } =
+    useFormik({
+      initialValues: {
+        taiKhoan: "",
+        matKhau: "",
+      },
+      validationSchema: yup.object({
+        taiKhoan: yup.string().required("Tài khoản không được để trống"),
+        matKhau: yup.string().required("Mật khẩu không được để trống"),
+      }),
+      onSubmit: (values) => {
+        console.log(values);
+        // Xử lý logic đăng ký ở đây
+        authService
+          .logIn(values)
+          .then((res) => {
+            console.log(res.data);
+            setLocalStorage("user", res.data.data);
+            showNotification("Đăng nhập thành công", "success");
+            setTimeout(() => {
+              navigate(path.homePage);
+            }, 1000);
+          })
+          .catch((err) => {
+            showNotification(err.response.data.message, "error");
+          });
+      },
+    });
   return (
     <div className="form-login flex h-screen flex-col md:flex-row">
       {/* Phần form đăng nhập */}
@@ -46,9 +50,9 @@ const LogInPage = () => {
         <div className="absolute top-4 left-4 md:top-8 md:left-8">
           <Link to={path.homePage}>
             <Image
-              src="/Image/logo.png"
+              src="/Image/logo2.jpeg"
               alt="Logo"
-              width={100}
+              width={60}
               className="w-24 md:w-32 lg:w-40"
               preview={false}
             />
@@ -58,26 +62,28 @@ const LogInPage = () => {
         <div className="w-full max-w-[500px] p-4 md:p-8">
           <h2 className="text-2xl font-bold mb-6 text-center">Đăng nhập</h2>
 
-          <form className="space-y-4" onSubmit={formik.handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <InputCustom
               labelContent="Tài khoản"
               placeholder="Nhập tài khoản của bạn"
               typeInput="text"
               name="taiKhoan"
-              value={formik.values.taiKhoan}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.taiKhoan}
+              value={values.taiKhoan}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.taiKhoan}
+              touched={touched.taiKhoan}
             />
             <InputCustom
               labelContent="Mật khẩu"
               placeholder="Nhập mật khẩu của bạn"
               typeInput="password"
               name="matKhau"
-              value={formik.values.matKhau}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.matKhau}
+              value={values.matKhau}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.matKhau}
+              touched={touched.matKhau}
             />
             {/* Thêm link quên mật khẩu */}
             <div className="flex justify-end">

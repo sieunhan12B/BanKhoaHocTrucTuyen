@@ -147,15 +147,17 @@ const ManagerUser = () => {
   };
 
   return (
-    <div className={` w-max-[1000px]  p-4  overflow-x-auto `}>
-      <div className={`mb-4 flex flex-col`}>
+    <div className="w-max-[1000px]">
+      <div className="mb-4 flex justify-between">
         <FormSearchProduct
-          className="mx-0 mb-4"
+          className="mx-0"
           title="Tìm kiếm người dùng..."
           onSearch={handleSearch}
         />
         <button
-          onClick={() => showModal()}
+          onClick={() => {
+            showModal();
+          }}
           className="bg-yellow-500/85 font-semibold rounded-md py-2 px-5"
         >
           Thêm người dùng

@@ -30,8 +30,8 @@ const Footer = () => {
           {/* Logo column */}
           <div className="lg:col-span-2">
             <Image
-              width="60%"
-              src="/Image/logo.png"
+              src="/Image/logo2.jpeg"
+              width={60}
               alt="Edumall Logo"
               preview={false}
             />
@@ -77,7 +77,7 @@ const Footer = () => {
                 Đăng ký
               </button>
             </div>
-            <p className="mt-4">Đường dây nóng: 0865868256</p>
+            <p className="mt-4">Đường dây nóng: 0988925891</p>
           </div>
         </div>
 

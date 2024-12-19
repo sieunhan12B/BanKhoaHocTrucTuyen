@@ -7,19 +7,22 @@ import { NotificationContext } from "../../App";
 import { useLocation } from "react-router-dom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { danhMucService } from "../../services/danhMuc.service";
+import { getLocalStorage } from "../../utils/utils";
 const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
   const { showNotification } = useContext(NotificationContext);
   const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [listUsers, setListUsers] = useState([]);
+  const user = getLocalStorage("user");
+  console.log(user);
 
   const formik = useFormik({
     initialValues: {
       maKhoaHoc: "",
       tenKhoaHoc: "",
       giaTien: "",
-      nguoiTao: "",
+      nguoiTao: user.taiKhoan,
       hinhAnh: "",
       moTa: "",
       loaiDanhMuc: "",

@@ -61,7 +61,7 @@ const MyAccountPage = () => {
           <div className="relative">
             <div className="w-24 sm:w-32 h-24 sm:h-32 rounded-full overflow-hidden border-2 border-gray-200">
               <Image
-                src={user?.avatar || "/Image/rimuru.jpg"}
+                src={user?.avatar || "/Image/hutao.gif"}
                 alt="Avatar"
                 className="w-full h-full object-cover"
               />
@@ -95,7 +95,7 @@ const MyAccountPage = () => {
               id="avatar-upload"
               className="hidden"
               accept="image/*"
-              //   onChange={handleImageChange}
+              // onChange={handleImageChange}
             />
           </div>
           <div className="text-center sm:text-left">

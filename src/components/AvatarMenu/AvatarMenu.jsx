@@ -12,6 +12,7 @@ const AvatarMenu = () => {
   const navigate = useNavigate();
   //   const dispatch = useDispatch();
   const user = getLocalStorage("user");
+  console.log(user);
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate(path.homePage);
@@ -95,7 +96,7 @@ const AvatarMenu = () => {
         >
           <div className="cursor-pointer">
             <Avatar
-              src={user.avatar || "/Image/avatar.jpg"}
+              src={user.avatar || "/Image/hutao.gif"}
               alt="User avatar"
               size={window.innerWidth < 768 ? 32 : 40}
             />

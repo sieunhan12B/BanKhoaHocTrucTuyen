@@ -84,7 +84,7 @@ const StudentTemplate = () => {
           theme="light"
           style={{
             borderRight: "1px solid #f0f0f0",
-            overflow: "auto",
+            overflow: "hidden",
             height: "100vh",
             position: "fixed",
             left: 0,
@@ -94,10 +94,10 @@ const StudentTemplate = () => {
         >
           <div className="p-4">
             <Image
-              src="/Image/logo.png"
+              src="/Image/logo2.jpeg"
               alt="Logo"
               preview={false}
-              width="60%"
+              width={60}
             />
           </div>
           <Menu

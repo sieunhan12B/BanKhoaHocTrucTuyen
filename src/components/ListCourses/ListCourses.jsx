@@ -19,7 +19,7 @@ const ListCourses = ({ data, loading }) => {
 
   const CourseCard = ({ data }) => (
     <Link
-      className="w-full shadow-md p-2"
+      className="w-full shadow-md p-2 hover:bg-gray-100 hover:scale-105 transition-transform duration-200"
       key={data.maKhoaHoc}
       to={`/courses-detail/${data.maKhoaHoc}`}
     >
@@ -28,9 +28,11 @@ const ListCourses = ({ data, loading }) => {
           <Image
             src={`http://localhost:8080/Image/${data.hinhAnh}`}
             alt={data.tenKhoaHoc}
-            className="w-full rounded-lg shadow-lg"
+            className="w-full rounded-lg "
             onError={() => setImageError(true)}
             preview={false}
+            width={280}
+            height={150}
           />
         </div>
 

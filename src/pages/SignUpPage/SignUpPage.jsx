@@ -11,7 +11,15 @@ import { NotificationContext } from "../../App";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const formik = useFormik({
+  const {
+    handleSubmit,
+    handleChange,
+    values,
+    errors,
+    setFieldValue,
+    touched,
+    handleBlur,
+  } = useFormik({
     initialValues: {
       taiKhoan: "",
       matKhau: "",
@@ -20,6 +28,21 @@ const SignUpPage = () => {
       email: "",
       sdt: "",
     },
+    validationSchema: Yup.object({
+      // regex
+      taiKhoan: Yup.string()
+        .required("Tài khoản không được để trống")
+        .matches(/^\S*$/, "Tài khoản không được có khoảng cách"),
+      matKhau: Yup.string().required("Mật khẩu không được để trống"),
+      xacNhanMatKhau: Yup.string()
+        .required("Mật khẩu không được để trống")
+        .oneOf([Yup.ref("matKhau"), null], "Mật khẩu không khớp"),
+      hoTen: Yup.string().required("Họ tên không được để trống"),
+      email: Yup.string()
+        .email("Email không đúng định dạng")
+        .required("Email không được để trống"),
+      sdt: Yup.string().required("Số điện thoại không được để trống"),
+    }),
     onSubmit: (values) => {
       authService
         .signUp(values)
@@ -44,9 +67,9 @@ const SignUpPage = () => {
         <div className="absolute top-4 left-4 md:top-8 md:left-8">
           <Link to={path.homePage}>
             <Image
-              src="/Image/logo.png"
+              src="/Image/logo2.jpeg"
               alt="Logo"
-              width={100}
+              width={60}
               className="w-24 md:w-32 lg:w-40"
               preview={false}
             />
@@ -56,14 +79,17 @@ const SignUpPage = () => {
         <div className="w-full max-w-[500px] p-4 md:p-8">
           <h2 className="text-2xl font-bold mb-6 text-center">Đăng ký</h2>
 
-          <form className="space-y-4" onSubmit={formik.handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <InputCustom
               labelContent="Tài khoản"
               placeholder="Nhập tài khoản của bạn"
               typeInput="text"
               name="taiKhoan"
-              onChange={formik.handleChange}
-              value={formik.values.taiKhoan}
+              onChange={handleChange}
+              value={values.taiKhoan}
+              onBlur={handleBlur}
+              error={errors.taiKhoan}
+              touched={touched.taiKhoan}
             />
 
             <InputCustom
@@ -71,39 +97,54 @@ const SignUpPage = () => {
               placeholder="Nhập mật khẩu của bạn"
               typeInput="password"
               name="matKhau"
-              onChange={formik.handleChange}
-              value={formik.values.matKhau}
+              onChange={handleChange}
+              value={values.matKhau}
+              onBlur={handleBlur}
+              error={errors.matKhau}
+              touched={touched.matKhau}
             />
             <InputCustom
               labelContent="Nhập lại mật khẩu"
               placeholder="Nhập lại mật khẩu của bạn"
               typeInput="password"
               name="xacNhanMatKhau"
-              onChange={formik.handleChange}
-              value={formik.values.xacNhanMatKhau}
+              onChange={handleChange}
+              value={values.xacNhanMatKhau}
+              onBlur={handleBlur}
+              error={errors.xacNhanMatKhau}
+              touched={touched.xacNhanMatKhau}
             />
             <InputCustom
               labelContent="Họ tên"
               placeholder="Nhập họ tên của bạn"
               name="hoTen"
-              onChange={formik.handleChange}
-              value={formik.values.hoTen}
+              onChange={handleChange}
+              value={values.hoTen}
+              onBlur={handleBlur}
+              error={errors.hoTen}
+              touched={touched.hoTen}
             />
             <InputCustom
               labelContent="Email"
               placeholder="Nhập email của bạn"
               typeInput="email"
               name="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
+              onChange={handleChange}
+              value={values.email}
+              onBlur={handleBlur}
+              error={errors.email}
+              touched={touched.email}
             />
             <InputCustom
               labelContent="Số điện thoại"
               placeholder="Nhập số điện thoại của bạn"
               typeInput="tel"
               name="sdt"
-              onChange={formik.handleChange}
-              value={formik.values.sdt}
+              onChange={handleChange}
+              value={values.sdt}
+              onBlur={handleBlur}
+              error={errors.sdt}
+              touched={touched.sdt}
             />
 
             <button

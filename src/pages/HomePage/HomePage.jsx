@@ -3,7 +3,7 @@ import Banner from "../../components/Banner/Banner";
 import ListCourses from "../../components/ListCourses/ListCourses";
 import { khoaHocService } from "../../services/khoaHoc.service";
 import { Image } from "antd";
-  
+
 const HomePage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,11 +30,12 @@ const HomePage = () => {
       <div className="container mx-auto max-w-[1400px] px-4 my-10 lg:px-8 xl:px-20">
         <div className="w-full items-center flex flex-col md:flex-row space-x-0 md:space-x-8">
           <Image
-            src="/Image/rimuru.jpg"
+            src="/Image/edupost.jpg"
             alt="Professional learning"
             fill
             className="object-cover mb-4 md:mb-0"
             priority
+            width={500}
           />
 
           <div className="w-full md:w-1/2 flex flex-col justify-end items-end gap-5">

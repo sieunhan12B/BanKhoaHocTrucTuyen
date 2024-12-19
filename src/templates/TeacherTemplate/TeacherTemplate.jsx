@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Menu, Space, Drawer } from "antd";
-import {
-  MenuOutlined,
-  BookOutlined,
-  HistoryOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { MenuOutlined, BookOutlined, UserOutlined } from "@ant-design/icons";
 import AvatarMenu from "../../components/AvatarMenu/AvatarMenu";
 import HomeIcon from "../../components/Icons/HomeIcon";
 import { getLocalStorage } from "../../utils/utils";
@@ -13,14 +8,13 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { path } from "../../common/path";
 import { Link } from "react-router-dom";
 import { Image } from "antd";
+import { khoaHocService } from "../../services/khoaHoc.service";
 const { Header, Content, Sider } = Layout;
 
 const TeacherTemplate = () => {
   const user = getLocalStorage("user");
-  console.log(user);
   const navigate = useNavigate();
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedKey, setSelectedKey] = useState(() => {
@@ -84,7 +78,7 @@ const TeacherTemplate = () => {
           theme="light"
           style={{
             borderRight: "1px solid #f0f0f0",
-            overflow: "auto",
+            overflow: "hidden",
             height: "100vh",
             position: "fixed",
             left: 0,
@@ -94,10 +88,10 @@ const TeacherTemplate = () => {
         >
           <div className="p-4">
             <Image
-              src="/Image/logo.png"
+              src="/Image/logo2.jpeg"
               alt="Logo"
               preview={false}
-              width="60%"
+              width={60}
             />
           </div>
           <Menu
@@ -121,7 +115,12 @@ const TeacherTemplate = () => {
         }}
       >
         <div className="p-4">
-          <Image src="/Image/logo.png" alt="Logo" preview={false} width="60%" />
+          <Image
+            src="/Image/logo2.jpeg"
+            alt="Logo"
+            preview={false}
+            width="60%"
+          />
         </div>
         <Menu
           mode="inline"
@@ -150,30 +149,12 @@ const TeacherTemplate = () => {
           <div className="flex items-center gap-2">
             <Link to={path.homePage} className="flex items-center gap-2">
               <HomeIcon className="w-6 h-6" />
-              <span className="text-base hidden sm:block font-medium leading-none">
-                Trang chủ
-              </span>
+              <span> Trang chủ</span>
             </Link>
           </div>
 
           {/* Right side */}
           <Space size={24} className="flex items-center">
-            <button className="flex items-center justify-center text-gray-600 hover:text-gray-800">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </button>
             <button className="flex items-center justify-center text-gray-600 hover:text-gray-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -211,7 +192,7 @@ const TeacherTemplate = () => {
               <div className="hidden lg:flex flex-col">
                 <h3 className="text-lg font-semibold">{user?.hoTen}</h3>
                 <p className="text-sm text-gray-600">
-                  {user.maLoaiNguoiDung === "HV" ? "Học viên" : "Giảng viên"}
+                  {user?.role === "HV" ? "Học viên" : "Giảng viên"}
                 </p>
               </div>
             </div>
@@ -222,13 +203,12 @@ const TeacherTemplate = () => {
             )}
           </Space>
         </Header>
-        <h1 className="text-2xl font-bold ml-4 mt-4 ">Hello {user.hoTen}</h1>
+
         {/* Content */}
         <Content>
-          {/* Your page content goes here */}
-          <div className="p-4">
-            <Outlet />
-          </div>
+          <h1 className="text-2xl font-bold ml-4 my-4 ">Hello {user?.hoTen}</h1>
+
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

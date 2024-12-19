@@ -133,7 +133,7 @@ const ManagerCategory = () => {
         />
         <button
           onClick={() => showModal()}
-          className="bg-yellow-500/85 font-semibold rounded-md py-2 px-5"
+          className="bg-yellow-500/85 font-semibold rounded-md py-3 px-5"
         >
           Thêm danh mục
         </button>

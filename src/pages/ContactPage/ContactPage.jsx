@@ -5,17 +5,17 @@ const ContactPage = () => {
   return (
     <div className="">
       <Banner
-        className="bg-[url('/Image/banner.png')]"
+        className="bg-[url('/Image/bannercontac2.jpg')]"
         title1="Liên hệ"
         title2="với chúng tôi"
         content1="Bạn có thắc mắc, gợi ý, hoặc tìm hiểu giải pháp thông minh?"
         content2="Liên hệ với chúng tôi!"
       />
-      <div className="flex flex-col md:flex-row justify-between h-auto m-5">
+      <div className="flex flex-col md:flex-row justify-between h-auto m-5 container mx-auto px-4 lg:px-8 xl:px-20 max-w-[1400px] py-8 ">
         {contactInfo.map(({ icon, title, content }, index) => (
           <div
             key={index}
-            className="w-full md:w-1/3 mx-2 bg-gray-50 p-5 mb-4 md:mb-0"
+            className="w-full md:w-1/3 mx-2 bg-gray-50 p-5 mb-4 md:mb-0 rounded-2xl"
           >
             <div className="rounded-full bg-yellow-500 w-10 h-10 text-center leading-10">
               <i className={`fa-solid ${icon}`}></i>

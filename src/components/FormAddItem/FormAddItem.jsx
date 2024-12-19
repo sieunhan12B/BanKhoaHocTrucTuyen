@@ -5,7 +5,6 @@ import InputCustom from "../Input/InputCustom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { NotificationContext } from "../../App";
 const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
-  console.log(userData);
   const { showNotification } = useContext(NotificationContext);
   const formik = useFormik({
     initialValues: {
@@ -24,6 +23,7 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
         nguoiDungService
           .updateUser(values)
           .then((res) => {
+            console.log(res);
             showNotification("Cập nhật người dùng thành công", "success");
 
             setTimeout(() => {
@@ -31,7 +31,8 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
               onFinish();
             }, 1000);
           })
-          .catch((err) => {
+          .catch((err) => { 
+            console.log(err);
             showNotification(err.response.data, "error");
           });
       } else {
@@ -39,6 +40,7 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
         nguoiDungService
           .addUser(values)
           .then((res) => {
+            console.log(res);
             showNotification("Thêm người dùng thành công", "success");
             setTimeout(() => {
               handleCancel();
@@ -46,7 +48,8 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
             }, 1000);
           })
           .catch((err) => {
-            showNotification(err.response.data, "error");
+            console.log(err);
+            showNotification(err.response.data.message, "error");
           });
       }
     },

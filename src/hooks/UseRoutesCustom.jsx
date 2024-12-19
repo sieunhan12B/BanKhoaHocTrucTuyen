@@ -20,7 +20,17 @@ import ManagerCourse from "../pages/ManagerCourse/ManagerCourse";
 import MyCoursePageTeach from "../pages/MyCoursePageTeach/MyCoursePageTeach";
 import CartPage from "../pages/CartPage/CartPage";
 import ManagerCategory from "../pages/ManagerCategory/ManagerCategory";
+import { getLocalStorage } from "../utils/utils";
+
 const UseRoutesCustom = () => {
+  const user = getLocalStorage("user");
+  const isAuthorized = (role) => {
+    if (user && role.includes(user.role)) {
+      return true;
+    }
+    return false;
+  };
+
   const routes = useRoutes([
     {
       path: path.homePage,
@@ -70,51 +80,47 @@ const UseRoutesCustom = () => {
     },
     {
       path: path.student,
-      element: <StudentTemplate />,
+      element: isAuthorized("HV") ? <StudentTemplate /> : <ErrorPage />,
       children: [
         {
           path: path.myAccount,
-          element: <MyAccountPage />,
+          element: isAuthorized("HV") ? <MyAccountPage /> : <ErrorPage />,
         },
         {
           path: path.myLearning,
-          element: <MyLearningPage />,
+          element: isAuthorized("HV") ? <MyLearningPage /> : <ErrorPage />,
         },
-        // {
-        //   path: path.dashboard,
-        //   element: <DashboardPage />,
-        // },
       ],
     },
-    // {
-    //   path: path.teacher,
-    //   element: <TeacherTemplate />,
-    //   children: [
-    //     {
-    //       path: path.myCourse,
-    //       element: <MyCoursePageTeach />,
-    //     },
-    //     {
-    //       path: path.myAccount,
-    //       element: <MyAccountPage />,
-    //     },
-    //   ],
-    // },
+    {
+      path: path.teacher,
+      element: isAuthorized("GV") ? <TeacherTemplate /> : <ErrorPage />,
+      children: [
+        {
+          path: path.myCourse,
+          element: isAuthorized("GV") ? <MyCoursePageTeach /> : <ErrorPage />,
+        },
+        {
+          path: path.myAccount,
+          element: isAuthorized("GV") ? <MyAccountPage /> : <ErrorPage />,
+        },
+      ],
+    },
     {
       path: path.admin,
-      element: <AdminTemplate />,
+      element: isAuthorized("admin") ? <AdminTemplate /> : <ErrorPage />,
       children: [
         {
           path: path.managerUser,
-          element: <ManagerUser />,
+          element: isAuthorized("admin") ? <ManagerUser /> : <ErrorPage />,
         },
         {
           path: path.managerCourse,
-          element: <ManagerCourse />,
+          element: isAuthorized("admin") ? <ManagerCourse /> : <ErrorPage />,
         },
         {
           path: path.managerCategory,
-          element: <ManagerCategory />,
+          element: isAuthorized("admin") ? <ManagerCategory /> : <ErrorPage />,
         },
       ],
     },

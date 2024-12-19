@@ -4,6 +4,10 @@ import { khoaHocService } from "../../services/khoaHoc.service";
 import { NotificationContext } from "../../App";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
+import CartIcon from "../../components/Icons/CartIcon";
+import { path } from "../../common/path";
+import { useNavigate } from "react-router-dom";
+import { getLocalStorage } from "../../utils/utils";
 import {
   Tabs,
   Avatar,
@@ -13,8 +17,6 @@ import {
   Select,
   Image,
   Card,
-  Row,
-  Col,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
@@ -33,7 +35,9 @@ const CoursesDetail = () => {
   const { showNotification } = useContext(NotificationContext);
   const [imageError, setImageError] = useState(false);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const user = getLocalStorage("user");
+  console.log(user);
   useEffect(() => {
     setLoading(true);
     khoaHocService
@@ -44,6 +48,17 @@ const CoursesDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
+    if (!user) {
+      showNotification(
+        "Vui lòng đăng nhập để mua khóa học,bạn sẽ chuyển về trang đăng nhập trong 1 giây nữa",
+        "info"
+      );
+      setTimeout(() => {
+        navigate(`${path.logIn}`);
+      }, 1500);
+      return;
+    }
+
     const isCourseInCart = cart.some(
       (item) => item.maKhoaHoc === courseDetail.maKhoaHoc
     );
@@ -255,8 +270,12 @@ const CoursesDetail = () => {
                 <h1 className="text-3xl font-bold mb-4">
                   {courseDetail.tenKhoaHoc}
                 </h1>
-                <p className="text-gray-600 mb-4">{courseDetail.moTa}</p>
+                <p className="mb-2">
+                  <strong>{courseDetail.giaTien}</strong>
+                </p>
                 <div className="course-meta mb-6">
+                  <p className="font-semibold">{courseDetail.moTa}</p>
+
                   <p className="mb-2">
                     <span className="font-semibold">Người tạo:</span>{" "}
                     {courseDetail.nguoiTao}
@@ -265,25 +284,34 @@ const CoursesDetail = () => {
                     <span className="font-semibold">Ngày tạo:</span>{" "}
                     {new Date(courseDetail.ngayTao).toLocaleDateString()}
                   </p>
-                  <p className="mb-2">
-                    <span className="font-semibold">Giá tiền :</span>{" "}
-                    {courseDetail.giaTien}
-                  </p>
                 </div>
-                <div className="flex gap-5">
+                <div className="flex gap-5 justify-end">
                   <button
-                    className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
-                    disabled={loading}
-                  >
-                    {loading ? "Đang xử lý..." : "Đăng ký khóa học"}
-                  </button>
-                  <button
+                    className="bg-gray-900 flex items-center gap-2  border-yellow-500 px-2 py-4 font-semibold hover:text-black text-yellow-500  hover:bg-yellow-600 transition-colors"
                     onClick={handleAddToCart}
-                    className="bg-yellow-500 border-yellow-500 px-7 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
-                    style={{ marginLeft: "10px" }}
                   >
-                    Thêm vào giỏ hàng
+                    <CartIcon />
+                    Thêm Vào Giỏ Hàng
                   </button>
+                  {/* <button
+                    className="bg-yellow-500 border-yellow-500 px-10 py-4 font-semibold  hover:bg-gray-900 hover:text-yellow-500 transition-colors"
+                    style={{ marginLeft: "10px" }}
+                    onClick={() => {
+                      if (!user) {
+                        showNotification(
+                          "Vui lòng đăng nhập để mua khóa học,bạn sẽ chuyển về trang đăng nhập trong 1 giây nữa ",
+                          "info"
+                        );
+                        setTimeout(() => {
+                          navigate(`${path.logIn}`);
+                        }, 1500);
+                      } else {
+                        navigate(`/${path.cart}`);
+                      }
+                    }}
+                  >
+                    Mua Ngay
+                  </button> */}
                 </div>
               </div>
             </Card>

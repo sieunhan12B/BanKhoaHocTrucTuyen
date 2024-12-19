@@ -5,10 +5,11 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { path } from "../../common/path";
 import HomeIcon from "../../components/Icons/HomeIcon";
 import AvatarMenu from "../../components/AvatarMenu/AvatarMenu";
+import { useEffect } from "react";
 
 const { Header, Sider, Content } = Layout;
 
@@ -34,12 +35,28 @@ const menuItems = [
 const AdminTemplate = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState(() => {
+    const pathname = location.pathname;
+    if (pathname.includes(path.managerUser)) {
+      return "1";
+    } else if (pathname.includes(path.managerCourse)) {
+      return "2";
+    } else if (pathname.includes(path.managerCategory)) {
+      return "3";
+    }
+    return "1";
+  });
 
-  // Simplified selected key logic
-  const selectedKey =
-    menuItems.find((item) => location.pathname.includes(path[item.key]))?.key ||
-    "1";
-
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname.includes(path.managerUser)) {
+      setSelectedKey("1");
+    } else if (pathname.includes(path.managerCourse)) {
+      setSelectedKey("2");
+    } else if (pathname.includes(path.managerCategory)) {
+      setSelectedKey("3");
+    }
+  }, [location.pathname]);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

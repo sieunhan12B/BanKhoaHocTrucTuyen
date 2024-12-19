@@ -44,7 +44,7 @@ const CategoryCoursePage = () => {
   return (
     <div>
       <Banner
-        className="bg-[url('/Image/banner.png')]"
+        className="bg-[url('/Image/bannercontact.jpg')]"
         title1={
           <Link to="/" className="hover:text-primary">
             <HomeIcon className="w-12 h-12" />

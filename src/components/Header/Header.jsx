@@ -13,9 +13,13 @@ import LanguageIcon from "../Icons/LanguageIcon";
 import { useNavigate } from "react-router-dom";
 import FormSearchCourse from "../FormAddItem/FormSearchCourse";
 import CustomDropdownHeader from "../CustomDropdownHeader/CustomDropdownHeader";
+import { useSelector } from "react-redux";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const cartData = useSelector((state) => state.cartSlice.cart);
+  const cartCount = cartData.length;
+  console.log(cartData);
   const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
@@ -35,7 +39,7 @@ const Header = () => {
             {/* Logo */}
             <div className="logo w-24 lg:w-32">
               <Link to={path.homePage}>
-                <Image width="100%" src="/Image/logo.png" preview={false} />
+                <Image width={60} src="/Image/logo2.jpeg" preview={false} />
               </Link>
             </div>
 
@@ -45,10 +49,28 @@ const Header = () => {
 
               <CustomDropdownHeader />
 
-              <NavLink to={path.blog} className="font-medium">
+              <NavLink
+                to={path.blog}
+                className={({ isActive }) => {
+                  return `font-medium border-b-2 border-transparent transition-all duration-300 transform hover:translate-x-1 ${
+                    isActive
+                      ? "!border-yellow-600 text-yellow-600"
+                      : "hover:border-black"
+                  }`;
+                }}
+              >
                 Bài viết
               </NavLink>
-              <NavLink to={path.contact} className="font-medium">
+              <NavLink
+                to={path.contact}
+                className={({ isActive }) =>
+                  `font-medium border-b-2 border-transparent transition-all duration-300 transform hover:translate-x-1 ${
+                    isActive
+                      ? "!border-yellow-600 text-yellow-600"
+                      : "hover:border-black"
+                  }`
+                }
+              >
                 Liên hệ
               </NavLink>
             </div>
@@ -57,15 +79,20 @@ const Header = () => {
               {user && (
                 <button
                   onClick={() => navigate(path.cart)}
-                  className="flex items-center justify-center text-gray-600 hover:text-gray-800"
+                  className="relative flex items-center justify-center text-gray-600 hover:text-yellow-500 transition-colors duration-300"
                 >
                   <CartIcon />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                      {cartCount}
+                    </span>
+                  )}
                 </button>
               )}
-              <button className="flex items-center justify-center text-gray-600 hover:text-gray-800">
+              <button className="flex items-center justify-center text-gray-600 hover:text-red-500 transition-colors duration-300">
                 <NotifyIcon />
               </button>
-              <button className="flex items-center justify-center text-gray-600 hover:text-gray-800">
+              <button className="flex items-center justify-center text-gray-600 hover:text-green-500 transition-colors duration-300">
                 <LanguageIcon />
               </button>
               <AvatarMenu />
