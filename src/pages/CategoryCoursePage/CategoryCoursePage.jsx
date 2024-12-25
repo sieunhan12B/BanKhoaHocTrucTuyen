@@ -47,10 +47,11 @@ const CategoryCoursePage = () => {
         className="bg-[url('/Image/bannercontact.jpg')]"
         title1={
           <Link to="/" className="hover:text-primary">
-            <HomeIcon className="w-12 h-12" />
+            <i className="text-white fa-solid fa-house"></i>
           </Link>
         }
         title2={`>> ${category}`}
+        classNameTitle="text-white"
       />
       <ListCourses data={courses} loading={loading} />
     </div>

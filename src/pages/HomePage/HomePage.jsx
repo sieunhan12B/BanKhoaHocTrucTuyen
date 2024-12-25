@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Banner from "../../components/Banner/Banner";
 import ListCourses from "../../components/ListCourses/ListCourses";
 import { khoaHocService } from "../../services/khoaHoc.service";
-import { Image } from "antd";
+import { Image, Carousel } from "antd";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
@@ -24,7 +24,18 @@ const HomePage = () => {
   }, []);
   return (
     <div>
-      <Banner className="bg-[url('/Image/bannersale.jpg')]" />
+      {/* <Banner className="bg-[url('/Image/bannersale.jpg')]" /> */}
+      <Carousel autoplaySpeed={3000} autoplay>
+        <div>
+          <Banner className="bg-[url('/Image/banner8.png')]" />
+        </div>
+        <div>
+          <Banner className="bg-[url('/Image/banner9.png')]" />
+        </div>
+        <div>
+          <Banner className="bg-[url('/Image/banner10.png')]" />
+        </div>
+      </Carousel>
       <ListCourses data={data} loading={loading} />
       <div className="propel-girl flex flex-col  my-10 mx-auto justify-between"></div>
       <div className="container mx-auto max-w-[1400px] px-4 my-10 lg:px-8 xl:px-20">

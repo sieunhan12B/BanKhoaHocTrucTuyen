@@ -81,7 +81,7 @@ const MyCoursePageTeach = () => {
           onSearch={handleSearch}
         />
         <button
-          className="bg-yellow-500  font-semibold text-xl  px-5 py-3 rounded-md "
+          className="bg-yellow-500 font-semibold text-xl px-5 py-3 rounded-md max-[768px]:text-base"
           onClick={() => setIsModalOpen(true)}
         >
           Tạo khóa học mới
@@ -99,7 +99,7 @@ const MyCoursePageTeach = () => {
         {filteredCourses.map((course) => (
           <li
             key={course.maKhoaHoc}
-            className="border p-4 rounded shadow flex justify-between items-center"
+            className="border p-4 rounded shadow flex max-[768px]:block justify-between items-center"
           >
             <div className="flex gap-4">
               <Image
@@ -122,7 +122,7 @@ const MyCoursePageTeach = () => {
                 </p>
               </div>
             </div>
-            <div className="ml-4 space-x-4">
+            <div className="ml-4 m space-x-4 text-right ">
               <button
                 onClick={() => handleEdit(course)}
                 className="bg-yellow-500 text-white  py-2 px-5"

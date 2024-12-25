@@ -293,7 +293,7 @@ const CoursesDetail = () => {
                     <CartIcon />
                     Thêm Vào Giỏ Hàng
                   </button>
-                  {/* <button
+                  <button
                     className="bg-yellow-500 border-yellow-500 px-10 py-4 font-semibold  hover:bg-gray-900 hover:text-yellow-500 transition-colors"
                     style={{ marginLeft: "10px" }}
                     onClick={() => {
@@ -306,12 +306,21 @@ const CoursesDetail = () => {
                           navigate(`${path.logIn}`);
                         }, 1500);
                       } else {
-                        navigate(`/${path.cart}`);
+                        if (
+                          cart.some(
+                            (item) => item.maKhoaHoc === courseDetail.maKhoaHoc
+                          )
+                        ) {
+                          navigate(`/${path.cart}`);
+                        } else {
+                          dispatch(addToCart(courseDetail));
+                          navigate(`/${path.cart}`);
+                        }
                       }
                     }}
                   >
                     Mua Ngay
-                  </button> */}
+                  </button>
                 </div>
               </div>
             </Card>
