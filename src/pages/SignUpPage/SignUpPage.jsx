@@ -21,27 +21,27 @@ const SignUpPage = () => {
     handleBlur,
   } = useFormik({
     initialValues: {
-      taiKhoan: "",
-      matKhau: "",
-      xacNhanMatKhau: "",
-      hoTen: "",
+      username: "",
+      password: "",
+      xacNhanpassword: "",
+      fullName: "",
       email: "",
-      sdt: "",
+      phone: "",
     },
     validationSchema: Yup.object({
       // regex
-      taiKhoan: Yup.string()
+      username: Yup.string()
         .required("Tài khoản không được để trống")
         .matches(/^\S*$/, "Tài khoản không được có khoảng cách"),
-      matKhau: Yup.string().required("Mật khẩu không được để trống"),
-      xacNhanMatKhau: Yup.string()
+      password: Yup.string().required("Mật khẩu không được để trống"),
+      xacNhanpassword: Yup.string()
         .required("Mật khẩu không được để trống")
-        .oneOf([Yup.ref("matKhau"), null], "Mật khẩu không khớp"),
-      hoTen: Yup.string().required("Họ tên không được để trống"),
+        .oneOf([Yup.ref("password"), null], "Mật khẩu không khớp"),
+      fullName: Yup.string().required("Họ tên không được để trống"),
       email: Yup.string()
         .email("Email không đúng định dạng")
         .required("Email không được để trống"),
-      sdt: Yup.string().required("Số điện thoại không được để trống"),
+      phone: Yup.string().required("Số điện thoại không được để trống"),
     }),
     onSubmit: (values) => {
       authService
@@ -84,45 +84,45 @@ const SignUpPage = () => {
               labelContent="Tài khoản"
               placeholder="Nhập tài khoản của bạn"
               typeInput="text"
-              name="taiKhoan"
+              name="username"
               onChange={handleChange}
-              value={values.taiKhoan}
+              value={values.username}
               onBlur={handleBlur}
-              error={errors.taiKhoan}
-              touched={touched.taiKhoan}
+              error={errors.username}
+              touched={touched.username}
             />
 
             <InputCustom
               labelContent="Mật khẩu"
               placeholder="Nhập mật khẩu của bạn"
               typeInput="password"
-              name="matKhau"
+              name="password"
               onChange={handleChange}
-              value={values.matKhau}
+              value={values.password}
               onBlur={handleBlur}
-              error={errors.matKhau}
-              touched={touched.matKhau}
+              error={errors.password}
+              touched={touched.password}
             />
             <InputCustom
               labelContent="Nhập lại mật khẩu"
               placeholder="Nhập lại mật khẩu của bạn"
               typeInput="password"
-              name="xacNhanMatKhau"
+              name="xacNhanpassword"
               onChange={handleChange}
-              value={values.xacNhanMatKhau}
+              value={values.xacNhanpassword}
               onBlur={handleBlur}
-              error={errors.xacNhanMatKhau}
-              touched={touched.xacNhanMatKhau}
+              error={errors.xacNhanpassword}
+              touched={touched.xacNhanpassword}
             />
             <InputCustom
               labelContent="Họ tên"
               placeholder="Nhập họ tên của bạn"
-              name="hoTen"
+              name="fullName"
               onChange={handleChange}
-              value={values.hoTen}
+              value={values.fullName}
               onBlur={handleBlur}
-              error={errors.hoTen}
-              touched={touched.hoTen}
+              error={errors.fullName}
+              touched={touched.fullName}
             />
             <InputCustom
               labelContent="Email"
@@ -139,12 +139,12 @@ const SignUpPage = () => {
               labelContent="Số điện thoại"
               placeholder="Nhập số điện thoại của bạn"
               typeInput="tel"
-              name="sdt"
+              name="phone"
               onChange={handleChange}
-              value={values.sdt}
+              value={values.phone}
               onBlur={handleBlur}
-              error={errors.sdt}
-              touched={touched.sdt}
+              error={errors.phone}
+              touched={touched.phone}
             />
 
             <button

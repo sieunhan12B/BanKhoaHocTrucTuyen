@@ -41,13 +41,13 @@ const ManagerCategory = () => {
     },
     {
       title: "Mã danh mục",
-      dataIndex: "maDanhMuc",
-      key: "maDanhMuc",
+      dataIndex: "categoryId",
+      key: "categoryId",
     },
     {
       title: "Tên danh mục",
-      dataIndex: "tenDanhMuc",
-      key: "tenDanhMuc",
+      dataIndex: "categoryName",
+      key: "categoryName",
     },
     {
       title: "Action",
@@ -55,9 +55,9 @@ const ManagerCategory = () => {
       render: (_, record) => (
         <Space size="middle">
           <button
-            onClick={() => {
+            onClick={() => {  
               danhMucService
-                .deleteCategory(record.maDanhMuc)
+                .deleteCategory(record.categoryId)
                 .then((res) => {
                   console.log(res);
                   showNotification("Xóa danh mục thành công", "success");
@@ -65,7 +65,7 @@ const ManagerCategory = () => {
                 })
                 .catch((err) => {
                   console.log(err);
-                  showNotification("Xóa danh mục thất bại", "error");
+                  showNotification(err.response.data.message, "error");
                 });
             }}
             className="bg-red-500/85 text-white py-2 px-5"
@@ -115,7 +115,7 @@ const ManagerCategory = () => {
 
   const handleSearch = (term) => {
     const filtered = categories.filter((category) => {
-      const normalizedName = removeVietnameseTones(category.tenDanhMuc)
+      const normalizedName = removeVietnameseTones(category.categoryName)
         .toLowerCase()
         .trim();
       return normalizedName.includes(term);

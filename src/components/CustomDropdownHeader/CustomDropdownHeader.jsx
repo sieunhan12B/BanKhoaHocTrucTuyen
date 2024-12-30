@@ -24,13 +24,13 @@ const CustomDropdownHeader = () => {
           <div className="bg-white rounded-lg shadow-lg p-4 max-h-60 overflow-y-auto">
             <h3 className="text-gray-500 font-medium mb-2">DANH MỤC</h3>
             <ul className="space-y-2">
-              {categories.map(({ id, tenDanhMuc, maDanhMuc }) => (
+              {categories.map(({ id, categoryName, categoryId }) => (
                 <Link
                   key={id}
-                  to={`/category/${maDanhMuc}`}
+                  to={`/category/${categoryId}`}
                   className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded-md cursor-pointer"
                 >
-                  <span className="text-gray-700">{tenDanhMuc}</span>
+                  <span className="text-gray-700">{categoryName}</span>
                 </Link>
               ))}
             </ul>

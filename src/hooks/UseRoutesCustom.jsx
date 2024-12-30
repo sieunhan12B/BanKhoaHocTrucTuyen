@@ -1,5 +1,5 @@
-import React from "react";
-import { useRoutes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useRoutes, useLocation } from "react-router-dom";
 import { path } from "../common/path";
 import HomePage from "../pages/HomePage/HomePage";
 import HomeTemplate from "../templates/HomeTemplate/HomeTemplate";
@@ -21,15 +21,21 @@ import MyCoursePageTeach from "../pages/MyCoursePageTeach/MyCoursePageTeach";
 import CartPage from "../pages/CartPage/CartPage";
 import ManagerCategory from "../pages/ManagerCategory/ManagerCategory";
 import { getLocalStorage } from "../utils/utils";
+import SearchPage from "../pages/SearchPage/SearchPage";
 
 const UseRoutesCustom = () => {
   const user = getLocalStorage("user");
   const isAuthorized = (role) => {
-    if (user && role.includes(user.role)) {
+    if (user && role.includes(user.roleId)) {
       return true;
     }
     return false;
   };
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Cuộn lên đầu trang mỗi khi pathname thay đổi
+  }, [pathname]);
 
   const routes = useRoutes([
     {
@@ -63,6 +69,10 @@ const UseRoutesCustom = () => {
         {
           path: path.cart,
           element: <CartPage />,
+        },
+        {
+          path: path.search,
+          element: <SearchPage />,
         },
       ],
     },
@@ -108,19 +118,19 @@ const UseRoutesCustom = () => {
     },
     {
       path: path.admin,
-      element: isAuthorized("admin") ? <AdminTemplate /> : <ErrorPage />,
+      element: isAuthorized("ADMIN") ? <AdminTemplate /> : <ErrorPage />,
       children: [
         {
           path: path.managerUser,
-          element: isAuthorized("admin") ? <ManagerUser /> : <ErrorPage />,
+          element: isAuthorized("ADMIN") ? <ManagerUser /> : <ErrorPage />,
         },
         {
           path: path.managerCourse,
-          element: isAuthorized("admin") ? <ManagerCourse /> : <ErrorPage />,
+          element: isAuthorized("ADMIN") ? <ManagerCourse /> : <ErrorPage />,
         },
         {
           path: path.managerCategory,
-          element: isAuthorized("admin") ? <ManagerCategory /> : <ErrorPage />,
+          element: isAuthorized("ADMIN") ? <ManagerCategory /> : <ErrorPage />,
         },
       ],
     },

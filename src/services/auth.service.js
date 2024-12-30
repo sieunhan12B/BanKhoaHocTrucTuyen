@@ -7,4 +7,7 @@ export const authService = {
   signUp: (data) => {
     return http.post("/Auth/DangKy", data);
   },
+  getUserInfo: (userId) => {
+    return http.get(`/Auth/ThongTinTaiKhoan/${userId}`);
+  },
 };

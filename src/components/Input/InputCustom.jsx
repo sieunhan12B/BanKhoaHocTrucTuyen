@@ -13,6 +13,7 @@ const InputCustom = ({
   touched,
   typeInput = "text",
   readOnly = false,
+  classNameInput = "border bg-gray-50 p-2.5",
 }) => {
   return (
     <div className={classWrapper}>
@@ -26,7 +27,7 @@ const InputCustom = ({
         readOnly={readOnly}
         type={typeInput}
         id={id}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        className={`${classNameInput}  border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full `}
         placeholder={placeholder}
         // value={value.hoTen}
         // onChange={handleChange}

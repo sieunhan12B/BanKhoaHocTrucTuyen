@@ -121,7 +121,12 @@ const StudentTemplate = () => {
         }}
       >
         <div className="p-4">
-          <Image src="/Image/logo.png" alt="Logo" preview={false} width="60%" />
+          <Image
+            src="/Image/logo2.jpeg"
+            alt="Logo"
+            preview={false}
+            width="60%"
+          />
         </div>
         <Menu
           mode="inline"
@@ -209,9 +214,9 @@ const StudentTemplate = () => {
             <div className="flex items-center gap-4">
               <AvatarMenu />
               <div className="hidden lg:flex flex-col">
-                <h3 className="text-lg font-semibold">{user?.hoTen}</h3>
+                <h3 className="text-lg font-semibold">{user?.fullName}</h3>
                 <p className="text-sm text-gray-600">
-                  {user.role === "HV" ? "Học viên" : "Giảng viên"}
+                  {user.roleId === "HV" ? "Học viên" : "Giảng viên"}
                 </p>
               </div>
             </div>
@@ -222,7 +227,7 @@ const StudentTemplate = () => {
             )}
           </Space>
         </Header>
-        <h1 className="text-2xl font-bold ml-4 mt-4 ">Hello {user.hoTen}</h1>
+        <h1 className="text-2xl font-bold ml-4 mt-4 ">Hello {user.fullName}</h1>
         {/* Content */}
         <Content>
           {/* Your page content goes here */}

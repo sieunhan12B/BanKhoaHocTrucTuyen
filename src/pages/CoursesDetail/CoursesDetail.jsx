@@ -8,6 +8,7 @@ import CartIcon from "../../components/Icons/CartIcon";
 import { path } from "../../common/path";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage } from "../../utils/utils";
+
 import {
   Tabs,
   Avatar,
@@ -17,8 +18,11 @@ import {
   Select,
   Image,
   Card,
+  Empty,
 } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { StarFilled, UserOutlined } from "@ant-design/icons";
+import { use } from "react";
+import { authService } from "../../services/auth.service";
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -29,23 +33,84 @@ const CoursesDetail = () => {
   const cart = useSelector((state) => state.cartSlice.cart);
   const [sortBy, setSortBy] = useState("newest");
   const [filterBy, setFilterBy] = useState("all");
-  const { id } = useParams();
+  const { courseId } = useParams();
   const [courseDetail, setCourseDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const { showNotification } = useContext(NotificationContext);
   const [imageError, setImageError] = useState(false);
+  const [infoUser, setInfoUser] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = getLocalStorage("user");
+
+  const comments = [
+    {
+      avatar: "../Image/trung.jpg",
+      username: "BaoBuu",
+      date: "2024-05-08 14:26",
+      category: "Phân loại hàng: Phi Hành Gia,Smart V3",
+      comment: "bấm phê, mỗi tội chưa mò đc nút thay đổi chế độ đèn",
+      images: ["../Image/rimuru.jpg", "../Image/premium.png"],
+    },
+    {
+      avatar: "../Image/trung1.jpg",
+      username: "Siêu nhân đây",
+      date: "2024-05-08 14:26",
+      category: "Phân loại hàng: Phi Hành Gia,Smart V3",
+      comment:
+        "Sản phẩm dùng rất ổn nha mọi người, pin trâu, full foam đầy đủ, stab được cân sẵn cũng tốt một cách bất ngờ. Có thể cắm switch và keycap xài luôn, lớp e-coating không quá nhám và phần nào đó khá mượt nữa. Rất recommend mọi người mua kit này trong tầm giá nha",
+      images: ["../Image/yenbinh.jpg", "../Image/hutao.gif"],
+    },
+    {
+      avatar: "../Image/nhat.jpg",
+      username: "Minh Nhật",
+      date: "2024-05-08 14:26",
+      category: "Phân loại hàng: Phi Hành Gia,Smart V3",
+      comment: "bấm phê, mỗi tội chưa mò đc nút thay đổi chế độ đèn",
+      images: ["../Image/girl.jpg", "../Image/tiktok.png"],
+    },
+  ];
+
   console.log(user);
   useEffect(() => {
     setLoading(true);
     khoaHocService
-      .getCourseDetail(id)
-      .then((res) => setCourseDetail(res.data.data))
+      .getCourseDetail(courseId)
+      .then((res) => {
+        console.log(res);
+        setCourseDetail(res.data.data);
+      })
       .catch(console.log)
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [courseId]);
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await authService.getUserInfo(user?.userId);
+        console.log(res);
+        // Lấy dữ liệu từ res.data.data
+        // setPurchasedCourses(res.data.data); // Cập nhật trạng thái với dữ liệu từ API
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false); // Đặt loading thành false sau khi hoàn thành
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    authService
+      .getUserInfo(user?.userId)
+      .then((res) => {
+        console.log(res);
+        setInfoUser(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleAddToCart = () => {
     if (!user) {
@@ -59,9 +124,20 @@ const CoursesDetail = () => {
       return;
     }
 
-    const isCourseInCart = cart.some(
-      (item) => item.maKhoaHoc === courseDetail.maKhoaHoc
+    // Kiểm tra tài khoản đã sở hữu khóa học này chưa
+    const hasCourse = infoUser?.coursesPurchased?.some(
+      (item) => item.courseId === courseDetail.courseId
     );
+
+    if (hasCourse) {
+      showNotification("Bạn đã sở hữu khóa học này", "info");
+      return;
+    }
+
+    const isCourseInCart = cart.some(
+      (item) => item.courseId === courseDetail.courseId
+    );
+
     if (isCourseInCart) {
       showNotification("Khóa học đã có trong giỏ hàng", "info");
     } else {
@@ -70,8 +146,54 @@ const CoursesDetail = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (!courseDetail) return <div>Không tìm thấy khóa học</div>;
+  const handleBuyNow = () => {
+    if (!user) {
+      showNotification(
+        "Vui lòng đăng nhập để mua khóa học,bạn sẽ chuyển về trang đăng nhập trong 1 giây nữa",
+        "info"
+      );
+      setTimeout(() => {
+        navigate(`${path.logIn}`);
+      }, 1500);
+      return;
+    }
+    console.log(infoUser);
+    // Kiểm tra tài khoản đã sở hữu khóa học này chưa
+    const hasCourse = infoUser?.coursesPurchased?.some(
+      (item) => item.courseId === courseDetail.courseId
+    );
+
+    if (hasCourse) {
+      showNotification("Bạn đã sở hữu khóa học này", "info");
+      return;
+    }
+
+    if (cart.some((item) => item.courseId === courseDetail.courseId)) {
+      navigate(`/${path.cart}`);
+    } else {
+      dispatch(addToCart(courseDetail));
+      navigate(`/${path.cart}`);
+    }
+  };
+
+  if (loading)
+    return (
+      <div>
+        <Empty
+          className="h-screen flex justify-center flex-col items-center "
+          description={"Đang tải ... "}
+        />
+      </div>
+    );
+  if (!courseDetail)
+    return (
+      <div>
+        <Empty
+          className="h-screen flex justify-center flex-col items-center"
+          description={"Không tìm thấy khóa học "}
+        />
+      </div>
+    );
 
   return (
     <div className="my-10 container px-8 mx-auto">
@@ -86,6 +208,7 @@ const CoursesDetail = () => {
         </div>
         <div className="flex flex-wrap justify-between gap-4 max-[1280px]:flex-col">
           <div className="placeholder-text max-[1280px]:w-full   w-3/5 order-1 max-[1280px]:order-2">
+            {/* //Combo thành thạo ... */}
             <div className="h-screen max-[1280px]:h-auto">
               <h1 className="text-5xl font-bold mb-4 leading-normal">
                 Combo. Thành thạo Excel và tin học văn phòng
@@ -108,10 +231,11 @@ const CoursesDetail = () => {
                   <span className="text-2xl">E</span>
                 </Avatar>
                 <Title level={4} className="m-0">
-                  Edumall
+                  Bảo Bình
                 </Title>
               </div>
             </div>
+            {/* Các khóa học trong lộ trình học tập này */}
             <div className="mx-auto mt-8">
               <h2 className="text-2xl font-bold mb-4">
                 Các khóa học trong lộ trình học tập này
@@ -140,6 +264,7 @@ const CoursesDetail = () => {
                 ))}
               </div>
             </div>
+            {/* Bạn sẽ học được những gì  */}
             <div className="mt-8">
               <h2 className="text-2xl font-bold mb-4">
                 Bạn sẽ học được những gì
@@ -170,6 +295,7 @@ const CoursesDetail = () => {
                 Excel, Kỹ năng chuyên ngành, Tin học văn phòng
               </p>
             </div>
+            {/* Đánh giá  */}
             <div className="w-full">
               <Tabs defaultActiveKey="excel" size="large" className="mb-8">
                 <TabPane tab="Excel" key="excel" />
@@ -186,7 +312,7 @@ const CoursesDetail = () => {
                     <span className="text-2xl">E</span>
                   </Avatar>
                   <Title level={4} className="m-0">
-                    Edumall
+                    Bảo Bình
                   </Title>
                 </div>
                 <Title level={3} className="mb-8">
@@ -255,34 +381,89 @@ const CoursesDetail = () => {
                 </div>
               </div>
             </div>
+            {/* Comment */}
+            <div className="my-5">
+              {comments.map((comment, index) => (
+                <div key={index} className="mb-6 last:mb-0">
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={comment.avatar}
+                        alt={`${comment.username}'s avatar`}
+                        width={100}
+                        height={100}
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-grow">
+                      <h6 className="text-lg font-semibold text-gray-900">
+                        {comment.username}
+                      </h6>
+                      <div className="flex gap-0.5 text-yellow-500 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <StarFilled
+                            key={i}
+                            className="h-4 w-4 fill-current"
+                          />
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        {comment.date} | {comment.category}
+                      </p>
+                      <p className="font-bold text-gray-900 dark:text-white mb-4">
+                        {comment.comment}
+                      </p>
+                      <div className="flex gap-2">
+                        {comment.images.map((image, imgIndex) => (
+                          <Image
+                            key={imgIndex}
+                            src={image}
+                            alt={`Comment image ${imgIndex + 1}`}
+                            width={100}
+                            height={100}
+                            className="rounded-lg object-cover"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {index < comments.length - 1 && (
+                    <hr className="my-6 border-gray-200 dark:border-gray-700" />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="course-card w-1/3 max-[1280px]:w-full  order-2 max-[1280px]:order-1">
             <Card className="rounded-lg w-full shadow-md sticky top-0 ">
               <div className="course-image w-full">
                 <Image
-                  src={`http://localhost:8080/Image/${courseDetail.hinhAnh}`}
-                  alt={courseDetail.tenKhoaHoc}
+                  src={`http://localhost:8080/Image/${courseDetail.image}`}
+                  alt={courseDetail.courseName}
                   className="w-full rounded-lg"
                   onError={() => setImageError(true)}
                 />
               </div>
               <div className="course-info">
                 <h1 className="text-3xl font-bold mb-4">
-                  {courseDetail.tenKhoaHoc}
+                  {courseDetail.courseName}
                 </h1>
+                <span className="font-bold">
+                  {courseDetail.category.categoryName}
+                </span>
                 <p className="mb-2">
-                  <strong>{courseDetail.giaTien}</strong>
+                  <strong>{courseDetail.price}</strong>
                 </p>
                 <div className="course-meta mb-6">
-                  <p className="font-semibold">{courseDetail.moTa}</p>
+                  <p className="font-semibold">{courseDetail.description}</p>
 
                   <p className="mb-2">
                     <span className="font-semibold">Người tạo:</span>{" "}
-                    {courseDetail.nguoiTao}
+                    {courseDetail.creator?.fullName}
                   </p>
                   <p className="mb-2">
                     <span className="font-semibold">Ngày tạo:</span>{" "}
-                    {new Date(courseDetail.ngayTao).toLocaleDateString()}
+                    {courseDetail.creationDate}
                   </p>
                 </div>
                 <div className="flex gap-5 justify-end">
@@ -297,26 +478,7 @@ const CoursesDetail = () => {
                     className="bg-yellow-500 border-yellow-500 px-10 py-4 font-semibold  hover:bg-gray-900 hover:text-yellow-500 transition-colors"
                     style={{ marginLeft: "10px" }}
                     onClick={() => {
-                      if (!user) {
-                        showNotification(
-                          "Vui lòng đăng nhập để mua khóa học,bạn sẽ chuyển về trang đăng nhập trong 1 giây nữa ",
-                          "info"
-                        );
-                        setTimeout(() => {
-                          navigate(`${path.logIn}`);
-                        }, 1500);
-                      } else {
-                        if (
-                          cart.some(
-                            (item) => item.maKhoaHoc === courseDetail.maKhoaHoc
-                          )
-                        ) {
-                          navigate(`/${path.cart}`);
-                        } else {
-                          dispatch(addToCart(courseDetail));
-                          navigate(`/${path.cart}`);
-                        }
-                      }
+                      handleBuyNow();
                     }}
                   >
                     Mua Ngay

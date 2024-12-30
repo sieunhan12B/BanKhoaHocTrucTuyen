@@ -17,10 +17,10 @@ const MyAccountPage = () => {
 
   const mappedUserData = {
     ...user,
-    soDt: user?.soDT,
+    phone: user?.phone,
   };
 
-  console.log(user.soDT);
+  console.log(user.phone);
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -122,7 +122,7 @@ const MyAccountPage = () => {
             name="username"
             typeInput="text"
             placeholder="Nhập tài khoản của bạn"
-            value={user?.taiKhoan || ""}
+            value={user?.username || ""}
             disabled
           />
           <InputCustom
@@ -130,7 +130,7 @@ const MyAccountPage = () => {
             id="fullname"
             name="fullname"
             placeholder="Nhập họ tên của bạn"
-            value={user?.hoTen || ""}
+            value={user?.fullName || ""}
           />
 
           <InputCustom
@@ -138,7 +138,7 @@ const MyAccountPage = () => {
             id="password"
             name="password"
             placeholder="Nhập mật khẩu"
-            value={user?.matKhau || ""}
+            value={user?.password || ""}
             typeInput="password"
           />
 
@@ -147,7 +147,7 @@ const MyAccountPage = () => {
             id="phone"
             name="phone"
             placeholder="Nhập số điện thoại"
-            value={user?.sdt || ""}
+            value={user?.phone || ""}
           />
           {/* <div className="w-full col-span-1 md:col-span-2">
             <label

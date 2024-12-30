@@ -8,15 +8,15 @@ import { Link } from "react-router-dom";
 import ListCourses from "../../components/ListCourses/ListCourses";
 import { danhMucService } from "../../services/danhMuc.service";
 const CategoryCoursePage = () => {
-  const { maDanhMuc } = useParams();
+  const { categoryId } = useParams();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("");
-  console.log(maDanhMuc);
+  console.log(categoryId);
   useEffect(() => {
     setLoading(true);
     khoaHocService
-      .getCourseByCategory(maDanhMuc)
+      .getCourseByCategory(categoryId)
       .then((res) => {
         console.log(res);
         setCourses(res.data.data);
@@ -27,14 +27,14 @@ const CategoryCoursePage = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [maDanhMuc]);
+  }, [categoryId]);
 
   useEffect(() => {
     danhMucService.getCategory().then((res) => {
       if (res.data.data.length > 0) {
         res.data.data.map((item) => {
-          if (item.maDanhMuc === maDanhMuc) {
-            setCategory(item.tenDanhMuc);
+          if (item.categoryId === categoryId) {
+            setCategory(item.categoryName);
           }
         });
       }

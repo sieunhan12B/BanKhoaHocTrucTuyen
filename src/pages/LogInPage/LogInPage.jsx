@@ -17,12 +17,12 @@ const LogInPage = () => {
   const { handleSubmit, handleChange, values, errors, touched, handleBlur } =
     useFormik({
       initialValues: {
-        taiKhoan: "",
-        matKhau: "",
+        username: "",
+        password: "",
       },
       validationSchema: yup.object({
-        taiKhoan: yup.string().required("Tài khoản không được để trống"),
-        matKhau: yup.string().required("Mật khẩu không được để trống"),
+        username: yup.string().required("Tài khoản không được để trống"),
+        password: yup.string().required("Mật khẩu không được để trống"),
       }),
       onSubmit: (values) => {
         console.log(values);
@@ -67,23 +67,23 @@ const LogInPage = () => {
               labelContent="Tài khoản"
               placeholder="Nhập tài khoản của bạn"
               typeInput="text"
-              name="taiKhoan"
-              value={values.taiKhoan}
+              name="username"
+              value={values.username}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.taiKhoan}
-              touched={touched.taiKhoan}
+              error={errors.username}
+              touched={touched.username}
             />
             <InputCustom
               labelContent="Mật khẩu"
               placeholder="Nhập mật khẩu của bạn"
               typeInput="password"
-              name="matKhau"
-              value={values.matKhau}
+              name="password"
+              value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={errors.matKhau}
-              touched={touched.matKhau}
+              error={errors.password}
+              touched={touched.password}
             />
             {/* Thêm link quên mật khẩu */}
             <div className="flex justify-end">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { getLocalStorage } from "../../utils/utils";
 import { khoaHocService } from "../../services/khoaHoc.service";
-import { Image } from "antd";
+import { Empty, Image } from "antd";
 import FormAddCourse from "../../components/FormAddItem/FormAddCourse";
 import { NotificationContext } from "../../App";
 import FormSearchProduct from "../../components/FormSearchProduct/FormSearchProduct";
@@ -10,28 +10,34 @@ import { removeVietnameseTones } from "../../utils/removeVietnameseTones";
 const MyCoursePageTeach = () => {
   const [courses, setCourses] = useState([]);
   const user = getLocalStorage("user");
+  console.log(user);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { showNotification } = useContext(NotificationContext);
   const [courseUpdateData, setCourseUpdateData] = useState(null);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     khoaHocService
-      .getCourseByTeacher(user.taiKhoan)
+      .getCourseByTeacher(user.userId)
       .then((res) => {
-        console.log(res.data.data);
+        console.log(res);
         setCourses(res.data.data);
         setFilteredCourses(res.data.data);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   const onFinish = () => {
     khoaHocService
-      .getCourseByTeacher(user.taiKhoan)
+      .getCourseByTeacher(user.userId)
       .then((res) => {
+        console.log(res);
         setCourses(res.data.data);
         setFilteredCourses(res.data.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
@@ -59,12 +65,13 @@ const MyCoursePageTeach = () => {
   };
 
   const handleCancel = () => {
+    setCourseUpdateData(null);
     setIsModalOpen(false);
   };
 
   const handleSearch = (searchTerm) => {
     const filtered = courses.filter((course) => {
-      const normalizedName = removeVietnameseTones(course.tenKhoaHoc)
+      const normalizedName = removeVietnameseTones(course.courseName)
         .toLowerCase()
         .trim();
       return normalizedName.includes(searchTerm);
@@ -95,50 +102,57 @@ const MyCoursePageTeach = () => {
         userData={user}
         courseData={courseUpdateData}
       />
-      <ul className="space-y-4">
-        {filteredCourses.map((course) => (
-          <li
-            key={course.maKhoaHoc}
-            className="border p-4 rounded shadow flex max-[768px]:block justify-between items-center"
-          >
-            <div className="flex gap-4">
-              <Image
-                src={`http://localhost:8080/Image/${course.hinhAnh}`}
-                alt={course.tenKhoaHoc}
-                className="w-full h-40 object-cover"
-                width={200}
-                height={100}
-              />
-              <div className="flex flex-col ">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {course.tenKhoaHoc}
-                </h2>
-                <p className="text-gray-700 mt-1"> Mô tả: {course.moTa}</p>
-                <p className="text-gray-500 mt-2">
-                  Ngày tạo:{" "}
-                  <span className="font-medium">
-                    {new Date(course.ngayTao).toLocaleDateString()}
-                  </span>
-                </p>
+      {courses.length != 0 ? (
+        <ul className="space-y-4">
+          {filteredCourses.map((course) => (
+            <li
+              key={course.courseId}
+              className="border p-4 rounded shadow flex max-[768px]:block justify-between items-center"
+            >
+              <div className="flex gap-4">
+                <Image
+                  src={`http://localhost:8080/Image/${course.image}`}
+                  alt={course.courseName}
+                  className="w-full h-40 object-cover"
+                  width={200}
+                  height={100}
+                />
+                <div className="flex flex-col ">
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    {course.courseName}
+                  </h2>
+                  <p className="text-gray-700 mt-1">
+                    {" "}
+                    Mô tả: {course.description}
+                  </p>
+                  <p className="text-gray-500 mt-2">
+                    Ngày tạo:{" "}
+                    <span className="font-medium">{course.creationDate}</span>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="ml-4 m space-x-4 text-right ">
-              <button
-                onClick={() => handleEdit(course)}
-                className="bg-yellow-500 text-white  py-2 px-5"
-              >
-                Chỉnh sửa
-              </button>
-              <button
-                onClick={() => handleDelete(course.maKhoaHoc)}
-                className="bg-red-500/85 text-white py-2 px-5"
-              >
-                Xóa
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+              <div className="ml-4 m space-x-4 text-right ">
+                <button
+                  onClick={() => handleEdit(course)}
+                  className="bg-yellow-500 text-white  py-2 px-5"
+                >
+                  Chỉnh sửa
+                </button>
+                <button
+                  onClick={() => handleDelete(course.courseId)}
+                  className="bg-red-500/85 text-white py-2 px-5"
+                >
+                  Xóa
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className=" flex justify-center items-center h-96">
+          <Empty description="Chưa tạo khóa học nào" />
+        </div>
+      )}
     </div>
   );
 };

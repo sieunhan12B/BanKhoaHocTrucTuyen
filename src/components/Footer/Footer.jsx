@@ -32,7 +32,7 @@ const Footer = () => {
             <Image
               src="/Image/logo2.jpeg"
               width={60}
-              alt="Edumall Logo"
+              alt="Bảo Bình Logo"
               preview={false}
             />
             <a href="https://facebook.com" className="mt-4 text-gray-600 block">
@@ -73,7 +73,7 @@ const Footer = () => {
                 placeholder="Email"
                 className="px-2 py-1 border rounded-xl flex-grow"
               />
-              <button className="bg-yellow-500 py-1 font-semibold hover:bg-yellow-600 text-black px-4 py-2 rounded-lg whitespace-nowrap text-sm">
+              <button className="bg-yellow-500 font-semibold hover:bg-yellow-600 text-black px-4 py-2 rounded-lg whitespace-nowrap text-sm">
                 Đăng ký
               </button>
             </div>
@@ -83,8 +83,34 @@ const Footer = () => {
 
         {/* Footer bottom - responsive text */}
         <div className="mt-8 pt-4 border-t flex flex-col lg:flex-row justify-between text-xs lg:text-sm text-gray-600 gap-2">
-          <p>Bản quyền © Edumall | Bảo lưu mọi quyền</p>
-          <p>Nền tảng đào tạo, học tập và phát triển nội dung phần tầm Medoo</p>
+          <p>
+            © 2024 CopyRights BaoBinh | Đặng Gia Bảo | DH52108711 |D21_TH06 |
+            Đoàn Thị Yến Bình | DH52108380 |D21_TH06
+          </p>
+          <div className="footer_icon ">
+            <ul className="ps-0 ps-lg-4 flex gap-2">
+              <li className="d-inline-block me-1">
+                <a href="#">
+                  <i className="fa-brands fa-facebook-f" />
+                </a>
+              </li>
+              <li className="d-inline-block me-1">
+                <a href="#">
+                  <i className="fa-brands fa-linkedin-in" />
+                </a>
+              </li>
+              <li className="d-inline-block me-1">
+                <a href="#">
+                  <i className="fa-brands fa-google-plus-g" />
+                </a>
+              </li>
+              <li className="d-inline-block me-1">
+                <a href="#">
+                  <i className="fa-brands fa-github" />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </footer>

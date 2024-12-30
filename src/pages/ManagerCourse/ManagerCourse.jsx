@@ -16,6 +16,7 @@ const ManagerCourse = () => {
   const [pageSize, setPageSize] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+
   useEffect(() => {
     // Thêm service call API get courses ở đây
     khoaHocService
@@ -34,7 +35,7 @@ const ManagerCourse = () => {
   const handleSearch = (searchTerm) => {
     const filtered = listCourses.filter((course) => {
       console.log(course);
-      const normalizedName = removeVietnameseTones(course.tenKhoaHoc)
+      const normalizedName = removeVietnameseTones(course.courseName)
         .toLowerCase()
         .trim();
       return normalizedName.includes(searchTerm);
@@ -78,50 +79,58 @@ const ManagerCourse = () => {
     },
     {
       title: "Mã khóa học",
-      dataIndex: "maKhoaHoc",
-      key: "maKhoaHoc",
+      dataIndex: "courseId",
+      key: "courseId",
     },
     {
       title: "Tên khóa học",
-      dataIndex: "tenKhoaHoc",
-      key: "tenKhoaHoc",
+      dataIndex: "courseName",
+      key: "courseName",
     },
     {
       title: "Giá tiền",
-      dataIndex: "giaTien",
-      key: "giaTien",
-      render: (giaTien) => `${giaTien.toLocaleString()} VNĐ`,
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `${price.toLocaleString()} VNĐ`,
     },
     {
       title: "Hình ảnh",
-      dataIndex: "hinhAnh",
-      key: "hinhAnh",
-      render: (hinhAnh) => (
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
         <Image
+          style={{ objectFit: "cover" }}
+          height={75}
           width={100}
-          alt="hinhAnh"
-          src={`http://localhost:8080/Image/${hinhAnh}`}
-          className="w-20 h-20"
+          alt="image"
+          src={`http://localhost:8080/Image/${image}`}
+          // className="w-20 h-20"
         />
       ),
     },
     {
       title: "Người tạo",
-      dataIndex: "nguoiTao",
-      key: "nguoiTao",
-      render: (nguoiTao) => nguoiTao,
+      dataIndex: "creator",
+      key: "creator",
+      render: (creator) => creator.fullName,
     },
     {
       title: "Ngày tạo",
-      dataIndex: "ngayTao",
-      key: "ngayTao",
-      render: (ngayTao) => ngayTao,
+      dataIndex: "creationDate",
+      key: "creationDate",
+      render: (creationDate) => creationDate,
     },
     {
       title: "Mô tả",
-      dataIndex: "moTa",
-      key: "moTa",
-      render: (moTa) => moTa,
+      dataIndex: "description",
+      key: "description",
+      render: (description) => description,
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "updateDate",
+      key: "updateDate",
+      render: (updateDate) => updateDate,
     },
     {
       title: "Action",
@@ -130,11 +139,11 @@ const ManagerCourse = () => {
         <Space size="middle" className="space-x-3">
           <button
             onClick={() => {
-              console.log(record.maKhoaHoc);
+              console.log(record.courseId);
 
               // Thêm xử lý xóa khóa học
               khoaHocService
-                .deleteCourse(record.maKhoaHoc)
+                .deleteCourse(record.courseId)
                 .then((res) => {
                   console.log(res);
                   showNotification("Xóa khóa học thành công", "success");
@@ -142,7 +151,7 @@ const ManagerCourse = () => {
                 })
                 .catch((err) => {
                   console.log(err);
-                  showNotification("không xóa được ", "error");
+                  showNotification(err.response.data.message, "error");
                 });
             }}
             className="bg-red-500/85 text-white py-2 px-5"

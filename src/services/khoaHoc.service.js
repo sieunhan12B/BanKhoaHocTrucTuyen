@@ -4,19 +4,19 @@ export const khoaHocService = {
   getCourse: () => {
     return http.get("/QuanLyKhoaHoc/LayDanhSachKhoaHoc");
   },
-  getCourseByCategory: (maDanhMuc) => {
+  getCourseByCategory: (categoryId) => {
     return http.get(
-      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoDanhMuc/${maDanhMuc}`
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoDanhMuc/${categoryId}`
     );
   },
-  getCourseDetail: (maKhoaHoc) => {
+  getCourseDetail: (courseId) => {
     return http.get(
-      `/QuanLyKhoaHoc/LayThongTinKhoaHocTheoMaKhoaHoc/${maKhoaHoc}`
+      `/QuanLyKhoaHoc/LayThongTinKhoaHocTheoMaKhoaHoc/${courseId}`
     );
   },
-  getCourseByName: (tenKhoaHoc) => {
+  getCourseByName: (courseName) => {
     return http.get(
-      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoTenKhoaHoc/${tenKhoaHoc}`
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoTenKhoaHoc/${courseName}`
     );
   },
   addCourse: (data) => {
@@ -26,8 +26,8 @@ export const khoaHocService = {
       },
     });
   },
-  deleteCourse: (maKhoaHoc) => {
-    return http.delete(`/QuanLyKhoaHoc/XoaKhoaHoc/${maKhoaHoc}`);
+  deleteCourse: (courseId) => {
+    return http.delete(`/QuanLyKhoaHoc/XoaKhoaHoc/${courseId}`);
   },
   updateCourse: (data) => {
     return http.put("/QuanLyKhoaHoc/CapNhatKhoaHoc", data, {
@@ -36,9 +36,21 @@ export const khoaHocService = {
       },
     });
   },
-  getCourseByTeacher: (taiKhoan) => {
+  getCourseByTeacher: (userId) => {
     return http.get(
-      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoMaNguoiDung/${taiKhoan}`
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoMaGiangVien/${userId}`
+    );
+  },
+
+  getCourseByUser: (userId) => {
+    return http.get(`/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoMaHocVien/${userId}`);
+  },
+  registerCourse: (data) => {
+    return http.post("/QuanLyKhoaHoc/DangKyKhoaHoc", data);
+  },
+  getCourseByKeyWord: (tuKhoa) => {
+    return http.get(
+      `/QuanLyKhoaHoc/LayDanhSachKhoaHocTheoTuKhoaTimKiem/${tuKhoa}`
     );
   },
 };

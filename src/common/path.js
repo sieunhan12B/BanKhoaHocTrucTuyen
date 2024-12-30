@@ -1,6 +1,6 @@
 export const path = {
   homePage: "/",
-  category: "/category/:maDanhMuc",
+  category: "/category/:categoryId",
   pageNotFound: "*",
   signUp: "/sign-up",
   logIn: "/log-in",
@@ -15,7 +15,8 @@ export const path = {
   contact: "contact",
   myAccount: "my-account",
   myLearning: "my-learning",
-  coursesDetail: "courses-detail/:id",
+  coursesDetail: "courses-detail/:courseId",
   managerCourse: "manager-course",
   cart: "cart",
+  search: "search",
 };

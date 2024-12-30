@@ -15,11 +15,11 @@ const FormAddCategory = ({
 
   const formik = useFormik({
     initialValues: {
-      maDanhMuc: "",
-      tenDanhMuc: "",
+      categoryId: "",
+      categoryName: "",
     },
     onSubmit: (values) => {
-      values.maDanhMuc = values.maDanhMuc.trim();
+      values.categoryId = values.categoryId.trim();
       if (categoryData) {
         // Cập nhật danh mục
         danhMucService
@@ -75,23 +75,23 @@ const FormAddCategory = ({
         <div className="grid grid-cols-2 gap-4">
           <InputCustom
             labelContent="Mã danh mục"
-            id="maDanhMuc"
-            name="maDanhMuc"
+            id="categoryId"
+            name="categoryId"
             placeholder="Nhập mã danh mục"
             classWrapper="mb-4"
             onChange={formik.handleChange}
-            value={formik.values.maDanhMuc}
+            value={formik.values.categoryId}
             readOnly={categoryData ? true : false}
           />
 
           <InputCustom
             labelContent="Tên danh mục"
-            id="tenDanhMuc"
-            name="tenDanhMuc"
+            id="categoryName"
+            name="categoryName"
             placeholder="Nhập tên danh mục"
             classWrapper="mb-4"
             onChange={formik.handleChange}
-            value={formik.values.tenDanhMuc}
+            value={formik.values.categoryName}
           />
         </div>
 

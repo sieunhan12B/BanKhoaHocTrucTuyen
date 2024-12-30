@@ -36,7 +36,7 @@ const FormSearchCourse = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(valueSearch);
-    navigate(`${path.listCourse}?tenKhoaHoc=${valueSearch}`);
+    navigate(`${path.search}?keyword=${valueSearch}`);
   };
 
   useEffect(() => {
@@ -44,25 +44,26 @@ const FormSearchCourse = () => {
       khoaHocService
         .getCourseByName(valueSearch)
         .then((res) => {
+          console.log(res);
           const newListJobSuggest = res.data.data
             .slice(0, 4)
             .map((item, index) => ({
               key: index.toString(),
               label: (
                 <Link
-                  to={`/courses-detail/${item.maKhoaHoc}`}
+                  to={`/courses-detail/${item.courseId}`}
                   className="flex items-center space-x-4"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Image
-                    src={`http://localhost:8080/Image/${item.hinhAnh}`}
+                    src={`http://localhost:8080/Image/${item.image}`}
                     className="h-14"
                     width={100}
                     alt=""
                   />
                   <div>
-                    <h4>{item.tenKhoaHoc}</h4>
-                    <p>{item.giaTien}</p>
+                    <h4>{item.courseName}</h4>
+                    <p>{item.price}</p>
                   </div>
                 </Link>
               ),
@@ -97,7 +98,7 @@ const FormSearchCourse = () => {
           <div className="pl-4  border border-gray-400 flex items-center justify-between min-w-[400px]">
             <input
               type="text"
-              placeholder="Vui lòng nhập vào công việc cần kiếm"
+              placeholder="Vui lòng nhập vào khóa học cần tìm"
               className="flex-1 focus:border-none focus:outline-none"
               onChange={handleChange}
               value={valueSearch}

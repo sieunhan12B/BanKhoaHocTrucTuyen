@@ -10,7 +10,7 @@ export const danhMucService = {
   updateCategory: (data) => {
     return http.put("/QuanLyDanhMuc/CapNhatDanhMuc", data);
   },
-  deleteCategory: (maDanhMuc) => {
-    return http.delete(`/QuanLyDanhMuc/XoaDanhMuc/${maDanhMuc}`);
+  deleteCategory: (categoryId) => {
+    return http.delete(`/QuanLyDanhMuc/XoaDanhMuc/${categoryId}`);
   },
 };

@@ -1,13 +1,6 @@
 import { http } from "./config";
 
 export const nguoiDungService = {
-  createUSer: (data, token) => {
-    return http.post("/QuanLyNguoiDung/ThemNguoiDung", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  },
   getListUser: () => {
     return http.get("/QuanLyNguoiDung/LayDanhSachNguoiDung");
   },

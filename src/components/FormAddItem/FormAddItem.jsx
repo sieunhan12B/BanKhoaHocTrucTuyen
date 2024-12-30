@@ -1,22 +1,25 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal } from "antd";
 import { useFormik } from "formik";
 import InputCustom from "../Input/InputCustom";
 import { nguoiDungService } from "../../services/nguoiDung.service";
 import { NotificationContext } from "../../App";
+import { roleService } from "../../services/role.service";
 const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
   const { showNotification } = useContext(NotificationContext);
+  const [rolesData, setRolesData] = useState([]);
+
   const formik = useFormik({
     initialValues: {
-      taiKhoan: "",
-      matKhau: "",
-      hoTen: "",
+      username: "",
+      password: "",
+      fullName: "",
       email: "",
-      sdt: "",
-      role: "HV",
+      phone: "",
+      roleId: "HV",
     },
     onSubmit: (values) => {
-      values.taiKhoan = values.taiKhoan.trim(); // Loại bỏ khoảng trắng đầu cuối
+      values.username = values.username.trim(); // Loại bỏ khoảng trắng đầu cuối
 
       if (userData) {
         // Update existing user
@@ -31,9 +34,9 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
               onFinish();
             }, 1000);
           })
-          .catch((err) => { 
+          .catch((err) => {
             console.log(err);
-            showNotification(err.response.data, "error");
+            showNotification(err.response.data.message, "error");
           });
       } else {
         // Add new user
@@ -55,12 +58,25 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
     },
   });
 
+  useEffect(() => {
+    roleService
+      .getRoles()
+      .then((res) => {
+        console.log(res);
+        setRolesData(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   // Reset form when modal opens/closes or userData changes
   useEffect(() => {
     if (userData) {
       formik.setValues({
         ...userData,
-        matKhau: "", // Clear password for security
+
+        // roleId: "HV", // Clear password for security
       });
     } else {
       formik.resetForm();
@@ -77,34 +93,34 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
       <form onSubmit={formik.handleSubmit}>
         <InputCustom
           labelContent="Tài khoản"
-          id="taiKhoan"
-          name="taiKhoan"
+          id="username"
+          name="username"
           placeholder="Nhập tài khoản"
           classWrapper={userData ? "mb-4" : "mb-4"}
           onChange={formik.handleChange}
-          value={formik.values.taiKhoan}
+          value={formik.values.username}
           readOnly={userData ? true : false}
         />
 
         <InputCustom
           labelContent="Mật khẩu"
-          id="matKhau"
-          name="matKhau"
+          id="password"
+          name="password"
           placeholder="Nhập mật khẩu"
           typeInput="password"
           classWrapper="mb-4"
           onChange={formik.handleChange}
-          value={formik.values.matKhau}
+          value={formik.values.password}
         />
 
         <InputCustom
           labelContent="Họ tên"
-          id="hoTen"
-          name="hoTen"
+          id="fullName"
+          name="fullName"
           placeholder="Nhập họ tên"
           classWrapper="mb-4"
           onChange={formik.handleChange}
-          value={formik.values.hoTen}
+          value={formik.values.fullName}
         />
 
         <InputCustom
@@ -120,12 +136,12 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
 
         <InputCustom
           labelContent="Số điện thoại"
-          id="sdt"
-          name="sdt"
+          id="phone"
+          name="phone"
           placeholder="Nhập số điện thoại"
           classWrapper="mb-4"
           onChange={formik.handleChange}
-          value={formik.values.sdt}
+          value={formik.values.phone}
         />
 
         {!window.location.pathname.includes("/my-account") && (
@@ -134,15 +150,16 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
               Loại người dùng
             </label>
             <select
-              name="role"
+              name="roleId"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={formik.handleChange}
-              value={formik.values.role}
+              value={formik.values.roleId}
             >
-              <option value="HV">Học viên</option>
-
-              <option value="admin">Quản trị</option>
-              <option value="GV">Giảng viên</option>
+              {rolesData.map((role) => (
+                <option key={role.roleId} value={role.roleId}>
+                  {role.roleId}
+                </option>
+              ))}
             </select>
           </div>
         )}

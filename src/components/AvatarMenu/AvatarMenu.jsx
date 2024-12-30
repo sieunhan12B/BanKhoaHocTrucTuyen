@@ -23,7 +23,7 @@ const AvatarMenu = () => {
       label: "Thông tin cá nhân",
       onClick: () =>
         navigate(
-          user.role === "GV"
+          user.roleId === "GV"
             ? `${path.teacher}/${path.myAccount}`
             : `${path.student}/${path.myAccount}`
         ),

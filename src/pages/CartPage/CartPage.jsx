@@ -1,8 +1,14 @@
 import React, { useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, Button, Image, Typography, Modal } from "antd";
-import { updateQuantity, removeFromCart } from "../../redux/cartSlice";
+import {
+  updateQuantity,
+  removeFromCart,
+  clearCart,
+} from "../../redux/cartSlice";
 import { NotificationContext } from "../../App";
+import { khoaHocService } from "../../services/khoaHoc.service";
+import { getLocalStorage } from "../../utils/utils";
 const { Title } = Typography;
 
 const CartPage = () => {
@@ -12,7 +18,7 @@ const CartPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [quantities, setQuantities] = useState({});
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-
+  const user = getLocalStorage("user");
   const columns = [
     {
       title: "Hình Ảnh",
@@ -28,7 +34,7 @@ const CartPage = () => {
     },
     {
       title: "Tên Sản Phẩm",
-      dataIndex: "name",
+      dataIndex: "courseName",
       align: "center",
     },
     {
@@ -36,7 +42,7 @@ const CartPage = () => {
       dataIndex: "price",
       align: "center",
       render: (text) =>
-        `${(text * 1000).toLocaleString("vi-VN", {
+        `${text.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
         })}`,
@@ -47,7 +53,7 @@ const CartPage = () => {
       align: "center",
       render: (text, record) => (
         <span>
-          {(record.price * record.quantity * 1000).toLocaleString("vi-VN", {
+          {(record.price * record.quantity).toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
           })}
@@ -78,22 +84,22 @@ const CartPage = () => {
   ];
 
   const data = cart.map((product) => ({
-    key: product.maKhoaHoc,
-    image: product.hinhAnh,
-    name: product.tenKhoaHoc,
-    price: product.giaTien,
+    key: product.courseId,
+    image: product.image,
+    courseName: product.courseName,
+    price: product.price,
     quantity: product.quantity,
   }));
 
-  const handleRemoveFromCart = (maKhoaHoc) => {
-    dispatch(removeFromCart({ maKhoaHoc }));
+  const handleRemoveFromCart = (courseId) => {
+    dispatch(removeFromCart({ courseId }));
   };
 
-  const handleQuantityChange = (maKhoaHoc, change) => {
+  const handleQuantityChange = (courseId, change) => {
     setQuantities((prev) => {
-      const newQuantity = Math.max((prev[maKhoaHoc] || 1) + change, 1);
-      dispatch(updateQuantity({ maKhoaHoc, quantity: newQuantity }));
-      return { ...prev, [maKhoaHoc]: newQuantity };
+      const newQuantity = Math.max((prev[courseId] || 1) + change, 1);
+      dispatch(updateQuantity({ courseId, quantity: newQuantity }));
+      return { ...prev, [courseId]: newQuantity };
     });
   };
 
@@ -102,6 +108,7 @@ const CartPage = () => {
   const handlePayment = () => setIsModalOpen(true);
 
   const handlePurchase = () => {
+    console.log(user);
     if (data.length === 0) {
       showNotification("Giỏ hàng của bạn trống, không thể thanh toán", "error");
       return;
@@ -110,7 +117,23 @@ const CartPage = () => {
       showNotification("Vui lòng chọn phương thức thanh toán", "error");
       return;
     }
-    showNotification("Thanh toán thành công", "success");
+    khoaHocService
+      .registerCourse({
+        username: user.username,
+        listCoursesId: cart.map((item) => {
+          console.log(item.courseId);
+          return item.courseId;
+        }),
+      })
+      .then((res) => {
+        console.log(res);
+        showNotification("Thanh toán thành công", "success");
+        dispatch(clearCart());
+      })
+      .catch((err) => {
+        console.log(err);
+        showNotification("Thanh toán thất bại", "error");
+      });
     setIsModalOpen(false);
   };
 
@@ -133,10 +156,7 @@ const CartPage = () => {
           Tổng Tiền:{" "}
           <span className="text-red-500">
             {data
-              .reduce(
-                (total, item) => total + item.price * item.quantity * 1000,
-                0
-              )
+              .reduce((total, item) => total + item.price * item.quantity, 0)
               .toLocaleString()}{" "}
             VND
           </span>
@@ -202,7 +222,7 @@ const CartPage = () => {
                 />
                 <span className="text-lg">
                   {item.name} - Số lượng: {item.quantity} - Giá:{" "}
-                  {(item.price * item.quantity * 1000).toLocaleString("vi-VN", {
+                  {(item.price * item.quantity).toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
@@ -214,10 +234,7 @@ const CartPage = () => {
             Tổng Tiền:{" "}
             <span className="text-red-500">
               {data
-                .reduce(
-                  (total, item) => total + item.price * item.quantity * 1000,
-                  0
-                )
+                .reduce((total, item) => total + item.price * item.quantity, 0)
                 .toLocaleString()}{" "}
               VND
             </span>

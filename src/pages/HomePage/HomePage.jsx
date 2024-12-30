@@ -3,6 +3,8 @@ import Banner from "../../components/Banner/Banner";
 import ListCourses from "../../components/ListCourses/ListCourses";
 import { khoaHocService } from "../../services/khoaHoc.service";
 import { Image, Carousel } from "antd";
+import StatsCounter from "../../components/CounterCard/CounterCard";
+import BlogCard from "../../components/HomeComponents/BlogCard";
 
 const HomePage = () => {
   const [data, setData] = useState([]);
@@ -37,7 +39,7 @@ const HomePage = () => {
         </div>
       </Carousel>
       <ListCourses data={data} loading={loading} />
-      <div className="propel-girl flex flex-col  my-10 mx-auto justify-between"></div>
+
       <div className="container mx-auto max-w-[1400px] px-4 my-10 lg:px-8 xl:px-20">
         <div className="w-full items-center flex flex-col md:flex-row space-x-0 md:space-x-8">
           <Image
@@ -87,6 +89,8 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      <StatsCounter />
+      <BlogCard />
     </div>
   );
 };
