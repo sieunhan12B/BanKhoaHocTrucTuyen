@@ -59,7 +59,7 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
       .getCategory()
       .then((res) => {
         console.log(res);
-        setCategories(res.data.data);
+        setCategories(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -68,8 +68,8 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
       .getListUser()
       .then((res) => {
         console.log(res);
-        console.log(res.data.data);
-        setListUsers(res.data.data);
+        console.log(res.data);
+        setListUsers(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -84,7 +84,7 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
       console.log(courseData);
       formik.setValues({
         ...courseData,
-        creatorAccount: courseData.creator?.username,
+        creatorAccount: courseData.createrResponse?.username,
         courseType: courseData.category?.categoryName,
 
         // image: fileValue,
@@ -169,7 +169,7 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
               >
                 <option value="">Chọn tài khoản người tạo</option>
                 {listUsers
-                  .filter((user) => user.roleId === "GV") // Filter for users with role "GV"
+                  .filter((user) => user.role.roleId === "GV") // Filter for users with role "GV"
                   .map((user) => (
                     <option key={user.username} value={user.username}>
                       {user.username}
@@ -184,13 +184,13 @@ const FormAddCourse = ({ isModalOpen, handleCancel, onFinish, courseData }) => {
             </label>
             <input
               type="file"
-              name="image"
+              name="file"
               // ref={fileInputRef} // Thêm ref vào đây
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={(event) => {
                 const file = event.currentTarget.files[0];
                 if (file) {
-                  formik.setFieldValue("image", file);
+                  formik.setFieldValue("file", file);
                   const reader = new FileReader();
                   reader.onloadend = () => setImagePreview(reader.result);
                   reader.readAsDataURL(file);

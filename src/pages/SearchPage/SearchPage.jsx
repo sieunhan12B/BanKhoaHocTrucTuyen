@@ -18,7 +18,7 @@ const SearchPage = () => {
         .getCourseByKeyWord(keyword)
         .then((res) => {
           console.log(res);
-          setCourses(res.data.data); // Cập nhật danh sách khóa học
+          setCourses(res.data); // Cập nhật danh sách khóa học
         })
         .catch((err) => {
           console.log(err);

@@ -45,7 +45,7 @@ const FormSearchCourse = () => {
         .getCourseByName(valueSearch)
         .then((res) => {
           console.log(res);
-          const newListJobSuggest = res.data.data
+          const newListJobSuggest = res.data
             .slice(0, 4)
             .map((item, index) => ({
               key: index.toString(),

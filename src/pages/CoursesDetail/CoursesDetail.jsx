@@ -78,7 +78,7 @@ const CoursesDetail = () => {
       .getCourseDetail(courseId)
       .then((res) => {
         console.log(res);
-        setCourseDetail(res.data.data);
+        setCourseDetail(res.data);
       })
       .catch(console.log)
       .finally(() => setLoading(false));
@@ -88,8 +88,8 @@ const CoursesDetail = () => {
       try {
         const res = await authService.getUserInfo(user?.userId);
         console.log(res);
-        // Lấy dữ liệu từ res.data.data
-        // setPurchasedCourses(res.data.data); // Cập nhật trạng thái với dữ liệu từ API
+        // Lấy dữ liệu từ res.data
+        // setPurchasedCourses(res.data); // Cập nhật trạng thái với dữ liệu từ API
       } catch (err) {
         console.log(err);
       } finally {
@@ -105,7 +105,7 @@ const CoursesDetail = () => {
       .getUserInfo(user?.userId)
       .then((res) => {
         console.log(res);
-        setInfoUser(res.data.data);
+        setInfoUser(res.data);
       })
       .catch((err) => {
         console.log(err);

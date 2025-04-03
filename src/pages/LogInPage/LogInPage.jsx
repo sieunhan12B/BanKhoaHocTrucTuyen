@@ -31,7 +31,7 @@ const LogInPage = () => {
           .logIn(values)
           .then((res) => {
             console.log(res.data);
-            setLocalStorage("user", res.data.data);
+            setLocalStorage("user", res.data);
             showNotification("Đăng nhập thành công", "success");
             setTimeout(() => {
               navigate(path.homePage);

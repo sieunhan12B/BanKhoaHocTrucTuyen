@@ -16,12 +16,12 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
       fullName: "",
       email: "",
       phone: "",
-      roleId: "HV",
     },
     onSubmit: (values) => {
       values.username = values.username.trim(); // Loại bỏ khoảng trắng đầu cuối
 
       if (userData) {
+        console.log(values);
         // Update existing user
         nguoiDungService
           .updateUser(values)
@@ -63,7 +63,7 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
       .getRoles()
       .then((res) => {
         console.log(res);
-        setRolesData(res.data.data);
+        setRolesData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -150,7 +150,7 @@ const FormAddItem = ({ isModalOpen, handleCancel, onFinish, userData }) => {
               Loại người dùng
             </label>
             <select
-              name="roleId"
+              name="role.roleId"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               onChange={formik.handleChange}
               value={formik.values.roleId}

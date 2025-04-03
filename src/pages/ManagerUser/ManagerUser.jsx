@@ -41,10 +41,11 @@ const ManagerUser = () => {
     nguoiDungService
       .getListUser()
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+
         showNotification("Lấy dữ liệu người dùng thành công", "success");
-        setListNguoiDung(res.data.data);
-        setFilteredUsers(res.data.data);
+        setListNguoiDung(res.data);
+        setFilteredUsers(res.data);
       })
       .catch((err) => {
         showNotification("Không thể lấy dữ liệu người dùng", "error");
@@ -70,7 +71,7 @@ const ManagerUser = () => {
         .toLowerCase()
         .trim();
       const matchesRole =
-        role && role !== "Tất cả" ? user.roleId === role : true;
+        role && role !== "Tất cả" ? user.role.roleId === role : true;
       return (
         (normalizedName.includes(searchTerm) ||
           normalizedAccount.includes(searchTerm)) &&
@@ -92,8 +93,8 @@ const ManagerUser = () => {
       .getListUser()
       .then((res) => {
         showNotification("Dữ liệu đã được cập nhật", "success");
-        setListNguoiDung(res.data.data);
-        setFilteredUsers(res.data.data);
+        setListNguoiDung(res.data);
+        setFilteredUsers(res.data);
       })
       .catch((err) => {
         showNotification("Không thể cập nhật dữ liệu", "error");
@@ -151,21 +152,20 @@ const ManagerUser = () => {
     },
     {
       title: <div className="text-center">Vai trò</div>,
-      dataIndex: "roleId",
-      key: "roleId",
+      key: "role",
       align: "center",
-      render: (text) => (
+      render: (_, record) => (
         <Tag
           className="text-center"
           color={
-            text === "HV"
+            record.role?.roleId === "HV"
               ? "green"
-              : text === "ADMIN"
+              : record.role?.roleId === "ADMIN"
               ? "red-inverse"
               : "volcano"
           }
         >
-          {text}
+          {record.role?.roleName || "Không xác định"}
         </Tag>
       ),
     },

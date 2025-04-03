@@ -22,8 +22,8 @@ const MyCoursePageTeach = () => {
       .getCourseByTeacher(user.userId)
       .then((res) => {
         console.log(res);
-        setCourses(res.data.data);
-        setFilteredCourses(res.data.data);
+        setCourses(res.data);
+        setFilteredCourses(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -38,8 +38,8 @@ const MyCoursePageTeach = () => {
       .getCourseByTeacher(user.userId)
       .then((res) => {
         console.log(res);
-        setCourses(res.data.data);
-        setFilteredCourses(res.data.data);
+        setCourses(res.data);
+        setFilteredCourses(res.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
       })
       .catch((err) => {

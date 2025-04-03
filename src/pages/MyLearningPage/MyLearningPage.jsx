@@ -13,12 +13,14 @@ const MyLearningPage = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      // user = getLocalStorage("user");
       console.log(user);
       try {
         const res = await authService.getUserInfo(user.userId);
         console.log(res);
-        // Lấy dữ liệu từ res.data.data
-        setPurchasedCourses(res.data.data.coursesPurchased); // Cập nhật trạng thái với dữ liệu từ API
+        // alert(res);
+        // Lấy dữ liệu từ res.data
+        setPurchasedCourses(res.data.coursesPurchased || []);
       } catch (err) {
         console.log(err);
       } finally {
@@ -38,7 +40,7 @@ const MyLearningPage = () => {
       <div className="py-4 ">
         <FormSearchProduct className="mx-0" />
       </div>
-      {purchasedCourses.length === 0 ? (
+      {purchasedCourses?.length === 0 ? (
         <Empty
           description="Bạn chưa mua khóa học nào"
           style={{ margin: "50px 0" }}

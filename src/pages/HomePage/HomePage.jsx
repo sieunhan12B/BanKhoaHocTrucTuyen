@@ -14,7 +14,8 @@ const HomePage = () => {
     khoaHocService
       .getCourse()
       .then((result) => {
-        setData(result.data.data);
+        console.log(result);
+        setData(result.data);
         console.log(result.data.data);
       })
       .catch((err) => {

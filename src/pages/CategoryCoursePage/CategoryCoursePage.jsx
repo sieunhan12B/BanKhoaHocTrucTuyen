@@ -19,7 +19,7 @@ const CategoryCoursePage = () => {
       .getCourseByCategory(categoryId)
       .then((res) => {
         console.log(res);
-        setCourses(res.data.data);
+        setCourses(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -31,8 +31,8 @@ const CategoryCoursePage = () => {
 
   useEffect(() => {
     danhMucService.getCategory().then((res) => {
-      if (res.data.data.length > 0) {
-        res.data.data.map((item) => {
+      if (res.data.length > 0) {
+        res.data.map((item) => {
           if (item.categoryId === categoryId) {
             setCategory(item.categoryName);
           }

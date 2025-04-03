@@ -11,7 +11,7 @@ const CustomDropdownHeader = () => {
     danhMucService
       .getCategory()
       .then((res) => {
-        setCategories(res.data.data);
+        setCategories(res.data);
       })
       .catch((err) => {
         console.log(err);

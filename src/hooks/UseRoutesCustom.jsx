@@ -25,8 +25,9 @@ import SearchPage from "../pages/SearchPage/SearchPage";
 
 const UseRoutesCustom = () => {
   const user = getLocalStorage("user");
+  console.log(user);
   const isAuthorized = (role) => {
-    if (user && role.includes(user.roleId)) {
+    if (user && role.includes(user.role.roleId)) {
       return true;
     }
     return false;

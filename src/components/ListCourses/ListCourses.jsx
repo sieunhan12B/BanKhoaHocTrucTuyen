@@ -10,6 +10,7 @@ const ListCourses = ({ data, loading, title = true }) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentCourses = data.slice(indexOfFirstItem, indexOfLastItem);
 
+
   useEffect(() => {
     setCurrentPage(1);
   }, [data]);
@@ -28,7 +29,7 @@ const ListCourses = ({ data, loading, title = true }) => {
           <Image
             // sizes="small"
             rootClassName="w-full"
-            src={`http://localhost:8080/Image/${data.image}`}
+            src={`https://nhom7sangthu6bankhoahoc.onrender.com/uploads/${data.image}`}
             alt={data.courseName}
             className="w-full rounded-lg max-h-[150px]    "
             onError={() => setImageError(true)}

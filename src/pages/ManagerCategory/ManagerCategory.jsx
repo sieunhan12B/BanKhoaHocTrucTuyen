@@ -21,8 +21,8 @@ const ManagerCategory = () => {
       .getCategory()
       .then((res) => {
         showNotification("Lấy dữ liệu danh mục thành công", "success");
-        setCategories(res.data.data);
-        setFilteredCategories(res.data.data);
+        setCategories(res.data);
+        setFilteredCategories(res.data);
       })
       .catch((err) => {
         showNotification("Lấy dữ liệu danh mục thất bại", "error");
@@ -100,8 +100,8 @@ const ManagerCategory = () => {
       .getCategory()
       .then((res) => {
         console.log(res);
-        setCategories(res.data.data);
-        setFilteredCategories(res.data.data);
+        setCategories(res.data);
+        setFilteredCategories(res.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
       })
       .catch((err) => {

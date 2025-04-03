@@ -24,8 +24,8 @@ const ManagerCourse = () => {
       .then((res) => {
         showNotification("Lấy dữ liệu khóa học thành công", "success");
         console.log(res);
-        setListCourses(res.data.data);
-        setFilteredCourses(res.data.data);
+        setListCourses(res.data);
+        setFilteredCourses(res.data);
       })
       .catch((err) => {
         showNotification("Lấy dữ liệu khóa học thất bại", "error");
@@ -57,8 +57,8 @@ const ManagerCourse = () => {
       .getCourse()
       .then((res) => {
         console.log(res);
-        setListCourses(res.data.data);
-        setFilteredCourses(res.data.data);
+        setListCourses(res.data);
+        setFilteredCourses(res.data);
         showNotification("Dữ liệu đã được cập nhật", "success");
       })
       .catch((err) => {
@@ -103,16 +103,16 @@ const ManagerCourse = () => {
           height={75}
           width={100}
           alt="image"
-          src={`http://localhost:8080/Image/${image}`}
-          // className="w-20 h-20"
+          src={`https://nhom7sangthu6bankhoahoc.onrender.com/uploads/${image}`}
+        // className="w-20 h-20"
         />
       ),
     },
     {
       title: "Người tạo",
-      dataIndex: "creator",
-      key: "creator",
-      render: (creator) => creator.fullName,
+      dataIndex: "createrResponse",
+      key: "createrResponse",
+      render: (createrResponse) => createrResponse.fullName,
     },
     {
       title: "Ngày tạo",

@@ -55,7 +55,7 @@ const SignUpPage = () => {
         })
         .catch((err) => {
           console.log(err);
-          showNotification("Đăng ký thất bại", "error");
+          showNotification(err.response.data, "error");
         });
     },
   });
