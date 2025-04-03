@@ -231,7 +231,7 @@ const CoursesDetail = () => {
                   <span className="text-2xl">E</span>
                 </Avatar>
                 <Title level={4} className="m-0">
-                  Bảo Bình
+                  Nhóm 7
                 </Title>
               </div>
             </div>
@@ -312,7 +312,7 @@ const CoursesDetail = () => {
                     <span className="text-2xl">E</span>
                   </Avatar>
                   <Title level={4} className="m-0">
-                    Bảo Bình
+                    Nhóm 7
                   </Title>
                 </div>
                 <Title level={3} className="mb-8">

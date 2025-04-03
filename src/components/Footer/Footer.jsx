@@ -32,7 +32,7 @@ const Footer = () => {
             <Image
               src="/Image/logo2.jpeg"
               width={60}
-              alt="Bảo Bình Logo"
+              alt="Nhóm 7 Logo"
               preview={false}
             />
             <a href="https://facebook.com" className="mt-4 text-gray-600 block">
@@ -83,10 +83,7 @@ const Footer = () => {
 
         {/* Footer bottom - responsive text */}
         <div className="mt-8 pt-4 border-t flex flex-col lg:flex-row justify-between text-xs lg:text-sm text-gray-600 gap-2">
-          <p>
-            © 2024 CopyRights BaoBinh | Đặng Gia Bảo | DH52108711 |D21_TH06 |
-            Đoàn Thị Yến Bình | DH52108380 |D21_TH06
-          </p>
+          <p>© 2024 CopyRights Nhóm 7| Sáng thứ 6 |D21_TH06</p>
           <div className="footer_icon ">
             <ul className="ps-0 ps-lg-4 flex gap-2">
               <li className="d-inline-block me-1">
