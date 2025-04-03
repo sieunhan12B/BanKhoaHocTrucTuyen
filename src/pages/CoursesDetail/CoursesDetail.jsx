@@ -438,7 +438,7 @@ const CoursesDetail = () => {
             <Card className="rounded-lg w-full shadow-md sticky top-0 ">
               <div className="course-image w-full">
                 <Image
-                  src={`http://localhost:8080/Image/${courseDetail.image}`}
+                  src={`https://nhom7sangthu6bankhoahoc.onrender.com/uploads/${courseDetail.image}`}
                   alt={courseDetail.courseName}
                   className="w-full rounded-lg"
                   onError={() => setImageError(true)}
